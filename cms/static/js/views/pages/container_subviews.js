@@ -1,8 +1,8 @@
 /**
  * Subviews (usually small side panels) for XBlockContainerPage.
  */
-define(["jquery", "underscore", "gettext", "js/views/baseview"],
-    function ($, _, gettext, BaseView) {
+define(["jquery", "underscore", "gettext", "js/views/baseview", "js/views/utils/view_utils"],
+    function ($, _, gettext, BaseView, ViewUtils) {
 
         var disabledCss = "is-disabled";
 
@@ -25,29 +25,6 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
             },
 
             render: function() {}
-        });
-
-        /**
-         * A controller for updating the visibility status of the unit on the RHS navigation tree.
-         */
-        var VisibilityStateController = UnitStateListenerView.extend({
-
-            render: function() {
-                var computeState = function(published, has_changes) {
-                    if (!published) {
-                        return "private";
-                    }
-                    else if (has_changes) {
-                        return "draft";
-                    }
-                    else {
-                        return "public";
-                    }
-                };
-                var state = computeState(this.model.get('published'), this.model.get('has_changes'));
-                this.$el.removeClass("private-item public-item draft-item");
-                this.$el.addClass(state + "-item");
-            }
         });
 
         /**
@@ -121,7 +98,7 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
                 if (e && e.preventDefault) {
                     e.preventDefault();
                 }
-                this.runOperationShowingMessage(gettext('Publishing&hellip;'),
+                ViewUtils.runOperationShowingMessage(gettext('Publishing&hellip;'),
                     function () {
                         return xblockInfo.save({publish: 'make_public'}, {patch: true});
                     }).always(function() {
@@ -136,11 +113,11 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
                 if (e && e.preventDefault) {
                     e.preventDefault();
                 }
-                this.confirmThenRunOperation(gettext("Discard Changes"),
+                ViewUtils.confirmThenRunOperation(gettext("Discard Changes"),
                     gettext("Are you sure you want to discard changes and revert to the last published version?"),
                     gettext("Discard Changes"),
                     function () {
-                        that.runOperationShowingMessage(gettext('Discarding Changes&hellip;'),
+                        ViewUtils.runOperationShowingMessage(gettext('Discarding Changes&hellip;'),
                             function () {
                                 return xblockInfo.save({publish: 'discard_changes'}, {patch: true});
                             }).always(function() {
@@ -185,7 +162,6 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
         });
 
         return {
-            'VisibilityStateController': VisibilityStateController,
             'PreviewActionController': PreviewActionController,
             'Publisher': Publisher,
             'PublishHistory': PublishHistory
