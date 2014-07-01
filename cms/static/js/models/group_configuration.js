@@ -10,7 +10,9 @@ function(Backbone, _, str, gettext, GroupModel, GroupCollection) {
             return {
                 name: '',
                 description: '',
-                groups: new GroupCollection([]),
+                groups: new GroupCollection([
+                    { name: 'Group A', order: 0 }, { name: 'Group B', order: 1 }
+                ]),
                 showGroups: false,
                 editing: false
             };
@@ -29,21 +31,31 @@ function(Backbone, _, str, gettext, GroupModel, GroupCollection) {
         },
 
         setOriginalAttributes: function() {
-            this._originalAttributes = this.toJSON();
+            this._originalAttributes = this.parse(this.toJSON());
         },
 
         reset: function() {
-            this.set(this._originalAttributes);
+            this.set(this._originalAttributes, { parse: true });
         },
 
         isDirty: function() {
             return !_.isEqual(
-                this._originalAttributes, this.toJSON()
+                this._originalAttributes, this.parse(this.toJSON())
             );
         },
 
         isEmpty: function() {
             return !this.get('name') && this.get('groups').isEmpty();
+        },
+
+        parse: function(response) {
+            var attrs = $.extend(true, {}, response);
+
+            _.each(attrs.groups, function(group, index) {
+                group.order = group.order || index;
+            });
+
+            return attrs;
         },
 
         toJSON: function() {
@@ -61,6 +73,27 @@ function(Backbone, _, str, gettext, GroupModel, GroupCollection) {
                     message: gettext('Group Configuration name is required'),
                     attributes: {name: true}
                 };
+            }
+
+            if (attrs.groups.length < 2) {
+                return {
+                    message: gettext('Please add at least two groups'),
+                    attributes: { groups: true }
+                };
+            } else {
+                // validate all groups
+                var invalidGroups = [];
+                attrs.groups.each(function(group) {
+                    if(!group.isValid()) {
+                        invalidGroups.push(group);
+                    }
+                });
+                if (!_.isEmpty(invalidGroups)) {
+                    return {
+                        message: gettext('All groups must have a name'),
+                        attributes: { groups: invalidGroups }
+                    };
+                }
             }
         }
     });

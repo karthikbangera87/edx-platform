@@ -30,7 +30,7 @@ define([
                     });
 
                     frag.appendChild(view.render().el);
-                });
+                }.bind(this));
 
                 this.$el.html([frag]);
             }
@@ -56,7 +56,7 @@ define([
 
         addOne: function(event) {
             if(event && event.preventDefault) { event.preventDefault(); }
-            this.collection.add([{editing: true}]);
+            this.collection.add([{ editing: true }]);
         }
     });
 

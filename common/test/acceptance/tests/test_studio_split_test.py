@@ -254,9 +254,10 @@ class GroupConfigurationsTest(ContainerBase):
 
         if groups:
             allocation = int(math.floor(100 / len(groups)))
-            for index, group in enumerate(groups):
-                self.assertEqual(group, config.groups[index].name)
-                self.assertEqual(str(allocation) + "%", config.groups[index].allocation)
+            self.assertEqual(groups, [group.name for group in config.groups])
+            for group in config.groups:
+                self.assertEqual(str(allocation) + "%", group.allocation)
+
         # Collapse the configuration
         config.toggle()
 
@@ -320,15 +321,19 @@ class GroupConfigurationsTest(ContainerBase):
         config = self.page.group_configurations()[0]
         config.name = "New Group Configuration Name"
         config.description = "New Description of the group configuration."
-        self.assertEqual(config.get_text('.action-primary'), "CREATE")
+        config.groups[1].name = "New Group Name"
+        # Add new group
+        config.add_group()  # Group C
+
         # Save the configuration
+        self.assertEqual(config.get_text('.action-primary'), "CREATE")
         config.save()
 
         self._assert_fields(
             config,
             name="New Group Configuration Name",
             description="New Description of the group configuration.",
-            groups=["Group A", "Group B"]
+            groups=["Group A", "New Group Name", "Group C"]
         )
 
         # Edit the group configuration
@@ -338,13 +343,20 @@ class GroupConfigurationsTest(ContainerBase):
         config.name = "Second Group Configuration Name"
         config.description = "Second Description of the group configuration."
         self.assertEqual(config.get_text('.action-primary'), "SAVE")
+        # Add new group
+        config.add_group()  # Group D
+        # Remove group with name "New Group Name"
+        config.groups[1].remove()
+        # Rename Group A
+        config.groups[0].name = "First Group"
         # Save the configuration
         config.save()
 
         self._assert_fields(
             config,
             name="Second Group Configuration Name",
-            description="Second Description of the group configuration."
+            description="Second Description of the group configuration.",
+            groups=["First Group", "Group C", "Group D"]
         )
 
     def test_use_group_configuration(self):
@@ -400,6 +412,8 @@ class GroupConfigurationsTest(ContainerBase):
         config = self.page.group_configurations()[0]
         config.name = "Name of the Group Configuration"
         config.description = "Description of the group configuration."
+        # Add new group
+        config.add_group()  # Group C
         # Cancel the configuration
         config.cancel()
 
@@ -424,6 +438,9 @@ class GroupConfigurationsTest(ContainerBase):
 
         config.name = "New Group Configuration Name"
         config.description = "New Description of the group configuration."
+        # Add 2 new groups
+        config.add_group()  # Group C
+        config.add_group()  # Group D
         # Cancel the configuration
         config.cancel()
 
@@ -438,24 +455,31 @@ class GroupConfigurationsTest(ContainerBase):
         """
         Ensure that validation of the group configuration works correctly.
         """
-        self.page.visit()
+        def try_to_save_and_verify_error_message(message):
+             # Try to save
+            config.save()
+            # Verify that configuration is still in editing mode
+            self.assertEqual(config.mode, 'edit')
+            # Verify error message
+            self.assertEqual(message, config.validation_message)
 
+        self.page.visit()
         # Create new group configuration
         self.page.create()
         # Leave empty required field
         config = self.page.group_configurations()[0]
         config.description = "Description of the group configuration."
-        # Try to save
-        config.save()
-        # Verify that configuration is still in editing mode
-        self.assertEqual(config.mode, 'edit')
-        # Verify error message
-        self.assertEqual(
-            "Group Configuration name is required",
-            config.validation_message
-        )
+
+        try_to_save_and_verify_error_message("Group Configuration name is required")
+
         # Set required field
         config.name = "Name of the Group Configuration"
+        config.groups[1].name = ''
+        try_to_save_and_verify_error_message("All groups must have a name")
+        config.groups[1].remove()
+        try_to_save_and_verify_error_message("Please add at least two groups")
+        config.add_group()
+
         # Save the configuration
         config.save()
 

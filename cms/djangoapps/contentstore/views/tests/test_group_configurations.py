@@ -2,7 +2,6 @@
 Group Configuration Tests.
 """
 import json
-import mock
 from contentstore.utils import reverse_course_url
 from contentstore.tests.utils import CourseTestCase
 from xmodule.partitions.partitions import Group, UserPartition
@@ -11,6 +10,10 @@ from xmodule.partitions.partitions import Group, UserPartition
 GROUP_CONFIGURATION_JSON = {
     u'name': u'Test name',
     u'description': u'Test description',
+    u'groups': [
+        {u'name': u'Group A'},
+        {u'name': u'Group B'},
+    ],
 }
 
 
@@ -20,23 +23,16 @@ class GroupConfigurationsBaseTestCase(object):
     """
     # pylint: disable=no-member
     def setUp(self):
-        """
-        Set up a url and group configuration content for tests.
-        """
-
-        def next_id():
-            """
-            Generate ids.
-            """
-            num = 000000000000
-            while True:
-                yield num
-                num += 1
-
         super(GroupConfigurationsBaseTestCase, self).setUp()
-        patcher = mock.patch('random.randint', return_value=next_id().next())
-        self.patched_randint = patcher.start()
-        self.addCleanup(patcher.stop)
+
+    def _remove_ids(self, content):
+        """
+        Remove ids from the response.
+        """
+        configuration_id = content.pop("id")
+        group_ids = [group.pop("id") for group in content["groups"]]
+
+        return (configuration_id, group_ids)
 
     def test_required_fields_are_absent(self):
         """
@@ -109,7 +105,6 @@ class GroupConfigurationsListHandlerTestCase(GroupConfigurationsBaseTestCase, Co
     """
     Test cases for group_configurations_list_handler.
     """
-
     def setUp(self):
         """
         Set up GroupConfigurationsListHandlerTestCase.
@@ -186,12 +181,11 @@ class GroupConfigurationsListHandlerTestCase(GroupConfigurationsBaseTestCase, Co
         Test that you can create a group configuration.
         """
         expected = {
-            u'id': 000000000000,
             u'description': u'Test description',
             u'name': u'Test name',
             u'groups': [
-                {u'id': 0, u'name': u'Group A'},
-                {u'id': 1, u'name': u'Group B'},
+                {u'name': u'Group A'},
+                {u'name': u'Group B'},
             ],
         }
         response = self.client.post(
@@ -204,7 +198,11 @@ class GroupConfigurationsListHandlerTestCase(GroupConfigurationsBaseTestCase, Co
         self.assertEqual(response.status_code, 201)
         self.assertIn("Location", response)
         content = json.loads(response.content)
+        (configuration_id, group_ids) = self._remove_ids(content)
+
         self.assertEqual(content, expected)
+        self.assertEqual(len(group_ids), len(set(group_ids)))
+        self.assertEqual(len(group_ids), 2)
 
 
 # pylint: disable=no-member
@@ -246,12 +244,11 @@ class GroupConfigurationsDetailHandlerTestCase(GroupConfigurationsBaseTestCase, 
         self.save_course()
 
         expected = {
-            u'id': self.ID,
             u'name': u'Test name',
             u'description': u'Test description',
             u'groups': [
-                {u'id': 0, u'name': u'Group A'},
-                {u'id': 1, u'name': u'Group B'},
+                {u'name': u'Group A'},
+                {u'name': u'Group B'},
             ],
         }
 
@@ -263,7 +260,12 @@ class GroupConfigurationsDetailHandlerTestCase(GroupConfigurationsBaseTestCase, 
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         content = json.loads(response.content)
+        (configuration_id, group_ids) = self._remove_ids(content)
+
         self.assertEqual(content, expected)
+        self.assertEqual(configuration_id, self.ID)
+        self.assertEqual(len(group_ids), len(set(group_ids)))
+        self.assertEqual(len(group_ids), 2)
 
     def test_can_edit_group_configuration(self):
         """
@@ -275,7 +277,7 @@ class GroupConfigurationsDetailHandlerTestCase(GroupConfigurationsBaseTestCase, 
             u'description': u'New Test description',
             u'groups': [
                 {u'id': 0, u'name': u'Group A'},
-                {u'id': 1, u'name': u'Group B'},
+                {u'id': 2, u'name': u'Group C'},
             ],
         }
         response = self.client.put(
