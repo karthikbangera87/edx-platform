@@ -1,4 +1,5 @@
 import json
+import mock
 from contentstore.utils import reverse_course_url
 from contentstore.tests.utils import CourseTestCase
 from xmodule.partitions.partitions import UserPartition
@@ -19,6 +20,9 @@ class GroupConfigurationsCreateTestCase(CourseTestCase):
             u'description': u'Test description',
             u'name': u'Test name'
         }
+        patcher = mock.patch('uuid.uuid1', return_value='test_id')
+        self.patched_uuid = patcher.start()
+        self.addCleanup(patcher.stop)
 
     def test_index_page(self):
         """
@@ -103,6 +107,7 @@ class GroupConfigurationsCreateTestCase(CourseTestCase):
         Test that you can create a group configuration.
         """
         expected_group_configuration = {
+            u'id': u'test_id',
             u'description': u'Test description',
             u'name': u'Test name',
             u'version': 1,
@@ -121,7 +126,6 @@ class GroupConfigurationsCreateTestCase(CourseTestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn("Location", response)
         group_configuration = json.loads(response.content)
-        del group_configuration['id']  # do not check for id, it is unique
         self.assertEqual(expected_group_configuration, group_configuration)
 
     def test_bad_group(self):
@@ -235,9 +239,10 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
             u'name': u'Test name'
         }
 
+        self.test_id = u'0e11749e-0682-11e4-9247-080027880ca6'
         self.group_configuration = {
             u'description': u'Test description',
-            u'id': 1,
+            u'id': self.test_id,
             u'name': u'Test name',
             u'version': 1,
             u'groups': [
@@ -261,7 +266,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
 
         edit_group_configuration = {
             u'description': u'Edit Test description',
-            u'id': 1,
+            u'id': self.test_id,
             u'name': u'Edit Test name',
             u'groups': [
                 {u'name': u'Group A'},
@@ -271,7 +276,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         put_url = reverse_course_url(
             'group_configurations_detail_handler',
             self.course.id,
-            kwargs={'group_configuration_id': 1}
+            kwargs={'group_configuration_id': self.test_id}
         )
         response = self.client.put(
             put_url,
@@ -281,7 +286,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         content = json.loads(response.content)
-        self.assertEqual(content['id'], u'1')
+        self.assertEqual(content['id'], self.test_id)
         self.assertEqual(content['description'], 'Edit Test description')
         self.assertEqual(content['name'], 'Edit Test name')
 
@@ -291,7 +296,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         """
         edit_group_configuration = {
             u'description': u'Edit Test description',
-            u'id': 1,
+            u'id': self.test_id,
             u'name': u'Edit Test name',
             u'groups': [
                 {u'name': u'Group A'},
@@ -301,7 +306,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         put_url = reverse_course_url(
             'group_configurations_detail_handler',
             self.course.id,
-            kwargs={'group_configuration_id': 1}
+            kwargs={'group_configuration_id': self.test_id}
         )
         response = self.client.put(
             put_url,
@@ -311,7 +316,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         content = json.loads(response.content)
-        self.assertEqual(content['id'], 1)
+        self.assertEqual(content['id'], self.test_id)
         self.assertEqual(content['description'], 'Edit Test description')
         self.assertEqual(content['name'], 'Edit Test name')
 
@@ -319,7 +324,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         """
         Group configuration is not present in course.
         """
-        bad_id = 100
+        bad_id = u'bad-id'
         url = reverse_course_url(
             'group_configurations_detail_handler',
             self.course.id,
@@ -332,18 +337,17 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         """
         Group configuration with appropriate id is present in course.
         """
-        good_id = 1
         url = reverse_course_url(
             'group_configurations_detail_handler',
             self.course.id,
-            kwargs={'group_configuration_id': good_id}
+            kwargs={'group_configuration_id': self.test_id}
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         group_configuration = json.loads(response.content)
         expected_group_configuration = {
             u'description': u'Test description',
-            u'id': 1,
+            u'id': self.test_id,
             u'name': u'Test name',
             u'groups': [
                 {u'id': 0, u'name': u'Group A'},
@@ -356,10 +360,10 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         """
         Attempt to edit nonexisting group configuration.
         """
-        # Nonexisting id=200 in cousre here in json.
+        # Nonexisting id in cousre here in json.
         edit_group_configuration = {
             u'description': u'Edit Test description',
-            u'id': 200,
+            u'id': u'non-existing-id',
             u'name': u'Edit Test name',
             u'groups': [
                 {u'name': u'Group A'},
@@ -370,7 +374,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         put_url = reverse_course_url(
             'group_configurations_detail_handler',
             self.course.id,
-            kwargs={'group_configuration_id': 1}
+            kwargs={'group_configuration_id': self.test_id}
         )
         response = self.client.put(
             put_url,
@@ -380,7 +384,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         content = json.loads(response.content)
-        self.assertEqual(content['id'], 1)
+        self.assertEqual(content['id'], self.test_id)
 
     def test_update_bad_group(self):
         """
@@ -389,7 +393,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         # Only one group in group configuration here.
         bad_group_configuration = {
             u'description': u'Test description',
-            u'id': 1,
+            u'id': self.test_id,
             u'name': u'Test name',
             u'version': 1,
             u'groups': [
@@ -400,7 +404,7 @@ class GroupConfigurationsDetailTestCase(CourseTestCase):
         url = reverse_course_url(
             'group_configurations_detail_handler',
             self.course.id,
-            kwargs={'group_configuration_id': 1}
+            kwargs={'group_configuration_id': self.test_id}
         )
         response = self.client.post(
             url,
