@@ -1,3 +1,9 @@
 <div class="xblock-string-field-editor">
-    <input type="text" value="<%= value %>" class="xblock-field-input page-header-title-edit is-hidden" data-metadata-name="<%= fieldName %>">
+  <form>
+    <label for="page-header-title-edit" class="sr">Edit Page Header (required)</label>
+    <input id="page-header-title-edit" type="text" value="<%= value %>" class="xblock-field-input page-header-title-edit is-hidden" data-metadata-name="<%= fieldName %>">
+    <button class="sr action action-primary" name="submit" type="submit">Save</button>
+    <button class="sr action action-secondary" name="cancel" type="button">Cancel</button>
+  </form>
+
 </div>
