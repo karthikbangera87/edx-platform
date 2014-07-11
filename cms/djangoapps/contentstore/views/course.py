@@ -938,7 +938,7 @@ def group_configurations_list_handler(request, course_key_string):
             return JsonResponse({"error": err.message}, status=400)
 
         if not configuration.get("id"):
-            configuration["id"] = unicode(uuid.uuid1())
+            configuration["id"] = str(uuid.uuid4().int)[:8]
 
         # Assign ids to every group in configuration.
         for index, group in enumerate(configuration.get('groups', [])):

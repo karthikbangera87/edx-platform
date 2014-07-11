@@ -222,33 +222,32 @@ class SettingsMenuTest(UniqueCourseTest):
         self.assertFalse(self.advanced_settings.q(css=link_css).present)
 
 
-class GroupConfigurationsTest(UniqueCourseTest):
+class GroupConfigurationsTest(ContainerBase):
     """
     Tests that Group Configurations page works correctly with previously
     added configurations in Studio
     """
 
-    def setUp(self):
-        super(GroupConfigurationsTest, self).setUp()
-
+    def setup_fixtures(self):
         course_fix = CourseFixture(**self.course_info)
         course_fix.add_advanced_settings({
             u"advanced_modules": {"value": ["split_test"]},
         })
+        course_fix.add_children(
+            XBlockFixtureDesc('chapter', 'Test Section').add_children(
+                XBlockFixtureDesc('sequential', 'Test Subsection').add_children(
+                    XBlockFixtureDesc('vertical', 'Test Unit')
+                )
+            )
+        ).install()
 
-        course_fix.install()
+        self.course_fix = course_fix
+
         self.course_fix = course_fix
         self.user = course_fix.user
 
-        self.auth_page = AutoAuthPage(
-            self.browser,
-            staff=False,
-            username=course_fix.user.get('username'),
-            email=course_fix.user.get('email'),
-            password=course_fix.user.get('password')
-        )
-        self.auth_page.visit()
-
+    def setUp(self):
+        super(GroupConfigurationsTest, self).setUp()
         self.page = GroupConfigurationsPage(
             self.browser,
             self.course_info['org'],
@@ -334,6 +333,28 @@ class GroupConfigurationsTest(UniqueCourseTest):
         self.assertEqual("Group A", config.groups[0].name)
         self.assertEqual("Group B", config.groups[1].name)
         self.assertEqual("50%", config.groups[0].allocation)
+
+    def test_use_group_configuration(self):
+        """
+        Create and use group configuration
+        """
+        self.page.visit()
+        self.assertEqual(len(self.page.group_configurations()), 0)
+        # Create new group configuration
+        self.page.create()
+
+        config = self.page.group_configurations()[0]
+        config.name = "New Group Configuration Name"
+        config.description = "New Description of the group configuration."
+        # Save the configuration
+        config.save()
+
+        unit = self.go_to_unit_page(make_draft=True)
+        add_advanced_component(unit, 0, 'split_test')
+        container = self.go_to_container_page()
+        container.edit()
+        component_editor = ComponentEditorView(self.browser, container.locator)
+        component_editor.set_select_value_and_save('Group Configuration', 'New Group Configuration Name')
 
     def test_can_cancel_creation_of_group_configuration(self):
         """
