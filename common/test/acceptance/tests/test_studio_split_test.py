@@ -227,6 +227,7 @@ class GroupConfigurationsTest(ContainerBase):
     Tests that Group Configurations page works correctly with previously
     added configurations in Studio
     """
+    __test__ = True
 
     def setup_fixtures(self):
         course_fix = CourseFixture(**self.course_info)
