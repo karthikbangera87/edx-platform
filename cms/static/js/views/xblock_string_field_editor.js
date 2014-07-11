@@ -10,7 +10,7 @@ define(["jquery", "gettext", "js/views/baseview"],
 
         var XBlockStringFieldEditor = BaseView.extend({
             events: {
-                'click .xblock-field-value': 'showInput',
+                'click .xblock-field-value-edit': 'showInput',
                 'change .xblock-field-input': 'updateField',
                 'focusout .xblock-field-input': 'onInputFocusLost',
                 'keyup .xblock-field-input': 'handleKeyUp'

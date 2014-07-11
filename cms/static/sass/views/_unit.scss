@@ -16,6 +16,23 @@
         @include font-size(28);
         @include line-height(32);
         font-weight: 600;
+
+        .action-edit {
+          @extend %ui-btn-pill;
+          @extend %t-copy-base;
+          @include transition(all $tmg-f2 linear 0s);
+          display: inline-block;
+          vertical-align: middle;
+          margin: (-$baseline/10) 0 0 ($baseline/4);
+          border: none;
+          padding: ($baseline/10) 8px;
+          color: $gray;
+
+          &:hover {
+            background-color: $blue;
+            color: $white;
+          }
+        }
       }
 
       .page-header-title-edit {

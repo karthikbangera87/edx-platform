@@ -69,16 +69,14 @@ templates = ["basic-modal", "modal-button", "edit-xblock-modal",
                     ancestor_url = xblock_studio_url(ancestor)
                     %>
                     % if ancestor_url:
-                        <a href="${ancestor_url}" class="navigation-item navigation-link navigation-parent">
-                            ${ancestor.display_name_with_default | h}
-                        </a>
+                        <a href="${ancestor_url}" class="navigation-item navigation-link navigation-parent">${ancestor.display_name_with_default | h}</a>
                     % else:
                         <span class="navigation-item navigation-parent">${ancestor.display_name_with_default | h}</span>
                     % endif
                 % endfor
             </small>
             <div class="wrapper-xblock-field" data-field="display_name">
-                <h1 class="page-header-title is-editable xblock-field-value">${xblock.display_name_with_default | h}</h1>
+                <h1 class="page-header-title is-editable xblock-field-value"><span class="title-value">${xblock.display_name_with_default | h}</span> <a href="" class="action-edit action-inline xblock-field-value-edit"><i class="icon-pencil"></i><span class="sr"> Edit</span></a></h1>
             </div>
         </div>
 
