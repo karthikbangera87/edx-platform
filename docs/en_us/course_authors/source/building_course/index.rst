@@ -1,7 +1,7 @@
-.. _Setting up your Course Index:
+.. _Setting up Your Course Index:
 
 ##########################
-Setting up your Course
+Setting up Your Course
 ##########################
 
 .. toctree::

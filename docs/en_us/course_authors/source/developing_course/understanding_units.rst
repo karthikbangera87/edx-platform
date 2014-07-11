@@ -8,12 +8,13 @@ This chapter explains units from the perspective of both course authors and
 students.
 
 * `What is a Unit?`_
+* `Viewing Units in the Outline`_
+* `Viewing Units as a Student`_
 * `Unit States`_
 * `The Unit User Interface`_
 
 For information on working with units as a course author, see :ref:`Working
 with Units`.
-
 
 .. _What is a Unit?:
 
@@ -26,15 +27,15 @@ Subsections are divided into units. A unit, in turn, contains one or more
 components, such as HTML content, problems, discussions, and videos.
 
 
-====================================================
+****************************
 Viewing Units in the Outline
-====================================================
+****************************
 
 TBP
 
-====================================================
+****************************
 Viewing Units as a Student 
-====================================================
+****************************
 
 To a student using the edX Learning Management System, each unit in the
 subsection appears as a link on the course ribbon at the top of the page. The

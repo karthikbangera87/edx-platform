@@ -1,7 +1,7 @@
-.. _Working with Courseware Index:
+.. _Developing Your Course Index:
 
 ##########################
-Working with Courseware
+Developing Your Course
 ##########################
 
 
@@ -11,8 +11,8 @@ Working with Courseware
    workflow
    understanding_outline
    working_with_outline
-   working_with_sections
-   working_with_subsections
+   course_sections
+   course_subsections
    understanding_units
    working_with_units
    releasing_courseware
