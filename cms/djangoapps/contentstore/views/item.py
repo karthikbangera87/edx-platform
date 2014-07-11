@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import hashlib
 import logging
 from uuid import uuid4
+import json
 
 from collections import OrderedDict
 from functools import partial
@@ -596,6 +597,7 @@ def create_xblock_info(xblock, data=None, metadata=None, include_ancestor_info=F
     if xblock.graded and xblock.category == u'sequential' and not is_unit(xblock):
         xblock_info['due_date'] = get_default_time_display(xblock.due)
         xblock_info['grading_format'] = xblock.format
+        xblock_info['course_graders'] =  json.dumps(CourseGradingModel.fetch(xblock.location.course_key).graders),
     return xblock_info
 
 

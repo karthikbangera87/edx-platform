@@ -68,6 +68,10 @@ define(["backbone", "js/utils/module"], function(Backbone, ModuleUtils) {
             * Grading policy for xblock
             **/
             "grading_format": null,
+            /**
+            * Course graders
+            **/
+            "course_graders": null,
         },
 
         parse: function(response) {

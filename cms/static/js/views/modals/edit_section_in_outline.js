@@ -4,8 +4,9 @@
  * and upon save an optional refresh function can be invoked to update the display.
  */
 define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/views/utils/view_utils",
-    "js/models/xblock_info", "js/views/xblock_editor", "date"],
-    function($, _, gettext, BaseModal, ViewUtils, XBlockInfo, XBlockEditorView, date) {
+    "js/models/xblock_info", "js/views/xblock_editor", "date",
+    "js/collections/course_grader", "js/views/overview_assignment_grader"],
+    function($, _, gettext, BaseModal, ViewUtils, XBlockInfo, XBlockEditorView, date, CourseGraderCollection, OverviewAssignmentGrader) {
         var EditSectionXBlockModal = BaseModal.extend({
             events : {
                 "click .action-save": "save",
@@ -23,6 +24,7 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
                 this.template = this.loadTemplate('edit-section-xblock-modal');
                 this.xblockInfo = xblockInfo;
                 this.date = date;
+                this.graderTypes = new CourseGraderCollection(JSON.parse(xblockInfo.get('course_graders')), {parse:true});
             },
 
 
@@ -51,6 +53,12 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
                 BaseModal.prototype.render.call(this);
                 this.$el.find('.date').datepicker({'dateFormat': 'm/d/yy'});
                 this.$el.find('.time').timepicker({'timeFormat' : 'H:i'});
+
+                new OverviewAssignmentGrader({
+                    el : this.$el.find('.gradable-status'),
+                    graders : this.graderTypes,
+                    hideSymbol : true,
+                 });
             }
 
 
