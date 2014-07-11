@@ -67,6 +67,22 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
                     graders : this.graderTypes,
                     hideSymbol : true,
                  });
+
+                function removeDateSetter(e) {
+                    e.preventDefault();
+                    var $block = $(this).closest('.due-date-input');
+                    $block.find('.date').val('');
+                    $block.find('.time').val('');
+                }
+
+                function syncReleaseDate(e) {
+                    e.preventDefault();
+                    $("#start_date").val("");
+                    $("#start_time").val("");
+                }
+
+                this.$el.find('.remove-date').bind('click', removeDateSetter);
+                this.$el.find('.sync-date').bind('click', syncReleaseDate);
             }
 
 
