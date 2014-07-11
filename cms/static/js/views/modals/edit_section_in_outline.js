@@ -25,6 +25,14 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
                 this.xblockInfo = xblockInfo;
                 this.date = date;
                 this.graderTypes = new CourseGraderCollection(JSON.parse(xblockInfo.get('course_graders')), {parse:true});
+                this.SelectGraderView = OverviewAssignmentGrader.extend({
+                   selectGradeType : function(e) {
+                      e.preventDefault();
+                      this.removeMenu(e);
+                      this.assignmentGrade.set('graderType', ($(e.target).hasClass('gradable-status-notgraded')) ? 'notgraded' : $(e.target).text());
+                      this.render();
+                    }
+                })
             },
 
 
@@ -49,12 +57,12 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
                 });
             },
 
+
             render: function() {
                 BaseModal.prototype.render.call(this);
                 this.$el.find('.date').datepicker({'dateFormat': 'm/d/yy'});
                 this.$el.find('.time').timepicker({'timeFormat' : 'H:i'});
-
-                new OverviewAssignmentGrader({
+                new this.SelectGraderView({
                     el : this.$el.find('.gradable-status'),
                     graders : this.graderTypes,
                     hideSymbol : true,
