@@ -3,10 +3,13 @@
  * It is invoked using the edit method which is passed an existing rendered xblock,
  * and upon save an optional refresh function can be invoked to update the display.
  */
-define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/views/utils/view_utils",
-    "js/models/xblock_info", "js/views/xblock_editor", "date",
-    "js/collections/course_grader", "js/views/overview_assignment_grader"],
-    function($, _, gettext, BaseModal, ViewUtils, XBlockInfo, XBlockEditorView, date, CourseGraderCollection, OverviewAssignmentGrader) {
+define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
+    "js/models/xblock_info", "date", "js/views/utils/xblock_utils",
+    "js/collections/course_grader", "js/views/overview_assignment_grader",
+    "js/utils/get_date"],
+    function($, _, gettext, BaseModal, XBlockInfo, date, XBlockViewUtils,
+        CourseGraderCollection, OverviewAssignmentGrader,
+        DateUtils) {
         var EditSectionXBlockModal = BaseModal.extend({
             events : {
                 "click .action-save": "save",
@@ -83,25 +86,20 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
 
                 this.$el.find('.remove-date').bind('click', removeDateSetter);
                 this.$el.find('.sync-date').bind('click', syncReleaseDate);
-            }
+            },
 
 
-
-            // save: function(event) {
-            //     var self = this,
-            //         editorView = this.editorView,
-            //         xblockInfo = this.xblockInfo,
-            //         data = editorView.getXModuleData();
-            //     event.preventDefault();
-            //     if (data) {
-            //         ViewUtils.runOperationShowingMessage(gettext('Saving&hellip;'),
-            //             function() {
-            //                 return xblockInfo.save(data);
-            //             }).done(function() {
-            //                 self.onSave();
-            //             });
-            //     }
-            // },
+            save: function(event) {
+                var data = true;
+                event.preventDefault();
+                var datetime = DateUtils(
+                    $('.edit-section-modal #start_date'),
+                    $('.edit-section-modal #start_time')
+                );
+                if (data) {
+                    XBlockViewUtils.updateXBlockField(this.xblockInfo, 'start', datetime)
+                }
+            },
 
         });
 

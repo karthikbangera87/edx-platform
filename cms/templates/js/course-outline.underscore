@@ -50,7 +50,7 @@
                 <div class="meta-info">
                     <% if (xblockInfo.get('published')) { %>
                         <i class="icon-check"></i>
-                        <%= gettext('Released:') %> Dec 31, 2015 at 21:00 UTC
+                        <%= gettext('Released:') %> <% xblockInfo.get('release_date') %>
                     <% } else { %>
                         <i class="icon-time"></i>
                         <%= gettext('Scheduled:') %> Dec 31, 2015 at 21:00 UTC
