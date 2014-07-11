@@ -167,21 +167,26 @@ class VideoPage(PageObject):
         else:
             return '.vert.vert-0'
 
-    def get_element_selector(self, video_display_name, class_name):
+    def get_element_selector(self, video_display_name, class_name, vertical=True):
         """
         Construct unique element selector.
 
         Arguments:
             video_display_name (str or None): Display name of a Video.
             class_name (str): css class name for an element.
+            vertical (bool): do we need vertical css selector or not. vertical css selector is not present in CMS
 
         Returns:
             str: Element Selector.
 
         """
+        vertical_selector = ''
+        if vertical:
+            vertical_selector = self.get_video_vertical_selector(video_display_name)
+
         return '{vertical} {video_element}'.format(
-            vertical=self.get_video_vertical_selector(video_display_name),
-            video_element=class_name)
+            vertical=vertical_selector,
+            video_element=class_name).strip()
 
     def is_video_rendered(self, mode, video_display_name=None):
         """

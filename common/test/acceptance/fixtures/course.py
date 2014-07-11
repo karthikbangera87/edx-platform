@@ -449,7 +449,7 @@ class CourseFixture(StudioApiFixture):
             loc = self._create_xblock(parent_loc, desc)
             self._create_xblock_children(loc, desc.children)
 
-        self._publish_xblock(parent_loc)
+        # self._publish_xblock(parent_loc)
 
     def _create_xblock(self, parent_loc, xblock_desc):
         """

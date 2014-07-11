@@ -4,20 +4,25 @@ CMS Video
 
 import os
 import requests
-from bok_choy.page_object import PageObject
 from bok_choy.promise import EmptyPromise, Promise
 from bok_choy.javascript import wait_for_js, js_defined
+from ....tests.helpers import YouTubeStubConfig
+from ...lms.video.video import VideoPage
+
 
 CLASS_SELECTORS = {
+    'video_container': 'div.video',
     'video_init': '.is-initialized',
     'video_xmodule': '.xmodule_VideoModule',
     'video_spinner': '.video-wrapper .spinner',
     'video_controls': 'section.video-controls',
     'attach_handout': '.upload-dialog > input[type="file"]',
     'upload_dialog': '.wrapper-modal-window-assetupload',
+    'xblock': '.add-xblock-component',
 }
 
 BUTTON_SELECTORS = {
+    'create_video': "a[data-category='video']",
     'handout_download': '.video-handout.video-download-button a',
     'handout_download_editor': '.wrapper-comp-setting.file-uploader .download-action',
     'upload_handout': '.upload-action',
@@ -28,7 +33,7 @@ BUTTON_SELECTORS = {
 
 @js_defined('window.Video', 'window.RequireJS.require', 'window.jQuery', 'window.XModule', 'window.XBlock',
             'window.MathJax.isReady')
-class VidoComponentPage(PageObject):
+class VideoComponentPage(VideoPage):
     """
     CMS Video Component Page
     """
@@ -37,7 +42,11 @@ class VidoComponentPage(PageObject):
 
     @wait_for_js
     def is_browser_on_page(self):
-        return self.q(css='div{0}'.format(CLASS_SELECTORS['video_xmodule'])).present
+        return self.q(css='div{0}'.format(CLASS_SELECTORS['video_xmodule'])).present or self.q(
+            css='div{0}'.format(CLASS_SELECTORS['xblock'])).present
+
+    def get_element_selector(self, video_display_name, class_name, vertical=True):
+        return super(VideoComponentPage, self).get_element_selector(None, class_name, vertical=False)
 
     def _wait_for(self, check_func, desc, result=False, timeout=200):
         """
@@ -59,9 +68,10 @@ class VidoComponentPage(PageObject):
         """
         Wait until video component rendered completely
         """
-        self._wait_for(lambda: self.q(css=CLASS_SELECTORS['video_init']).present, 'Video Player Initialized')
-        self._wait_for(lambda: not self.q(css=CLASS_SELECTORS['video_spinner']).visible, 'Video Buffering Completed')
-        self._wait_for(lambda: self.q(css=CLASS_SELECTORS['video_controls']).visible, 'Player Controls are Visible')
+        if not YouTubeStubConfig.get_configuration().get('youtube_api_blocked'):
+            self._wait_for(lambda: self.q(css=CLASS_SELECTORS['video_init']).present, 'Video Player Initialized')
+            self._wait_for(lambda: not self.q(css=CLASS_SELECTORS['video_spinner']).visible, 'Video Buffering Completed')
+            self._wait_for(lambda: self.q(css=CLASS_SELECTORS['video_controls']).visible, 'Player Controls are Visible')
 
     def click_button(self, button_name):
         """
@@ -74,6 +84,17 @@ class VidoComponentPage(PageObject):
         self.q(css=BUTTON_SELECTORS[button_name]).first.click()
         self.wait_for_ajax()
 
+    @staticmethod
+    def file_path(filename):
+        """
+        Construct file path to be uploaded to assets.
+
+        Arguments:
+            filename (str): asset filename
+
+        """
+        return os.sep.join(__file__.split(os.sep)[:-5]) + '/data/uploads/' + filename
+
     def upload_handout(self, handout_filename):
         """
         Upload a handout file to assets
@@ -82,7 +103,7 @@ class VidoComponentPage(PageObject):
             handout_filename (str): handout file name
 
         """
-        handout_path = os.sep.join(__file__.split(os.sep)[:-5]) + '/data/uploads/' + handout_filename
+        handout_path = self.file_path(handout_filename)
 
         self.click_button('upload_handout')
 
@@ -140,3 +161,50 @@ class VidoComponentPage(PageObject):
         # TODO! Remove .present below after bok-choy is updated to latest commit, Only .visible is enough
         return self.q(css=BUTTON_SELECTORS['handout_download']).present and self.q(
             css=BUTTON_SELECTORS['handout_download']).visible
+
+    def _goto_files_upload_page(self):
+        """
+        Navigate to `Files & Uploads` page
+        """
+        menu_selector = 'li.nav-course-courseware'
+        uploads_selector = 'li.nav-course-courseware-uploads a'
+
+        self.q(css=menu_selector).first.click()
+        self.q(css=uploads_selector).first.click()
+
+        # Ensure that `Upload New File` button is visible
+        upload_new_file_button_selector = '.upload-button.new-button'
+        self._wait_for(lambda: self.q(css=upload_new_file_button_selector).visible, 'Upload New File is Visible')
+
+    def upload_subtitles(self, subtitle_filename):
+        """
+        Upload subtitle file specified by `subtitle_filename`
+
+        Arguments:
+            subtitle_filename (str): subtitle filename
+
+        """
+        self._goto_files_upload_page()
+
+        upload_new_file_button_selector = '.upload-button.new-button'
+        self.q(css=upload_new_file_button_selector).first.click()
+
+        # Ensure File Upload Modal Dialog is Visible
+        upload_dialog_selector = '.modal-body'
+        self._wait_for(lambda: self.q(css=upload_dialog_selector).visible, 'Upload New File Dialog is Visible')
+
+        # Selenium send_keys function only works with visible web elements
+        # The Browse button on upload dialog is hidden due to class="file-input"
+        # which causes the selenium to through an ElementNotVisibleException
+        # So we first remove class="file-input" to make Browse button visible
+        js_code = '$(".file-chooser > input").removeClass( "file-input" )'
+        self.browser.execute_script(js_code)
+
+        attach_file_selector = '.file-chooser input[type="file"]'
+        self.q(css=attach_file_selector).results[0].send_keys(self.file_path(subtitle_filename))
+
+        upload_status_selector = '.progress-fill'
+        self._wait_for(lambda: 'Upload completed' in self.q(css=upload_status_selector).text[0], 'Upload Completed')
+
+        upload_dialog_close_selector = '.close-button'
+        self.q(css=upload_dialog_close_selector).first.click()
