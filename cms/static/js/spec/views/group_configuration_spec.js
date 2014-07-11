@@ -24,10 +24,12 @@ define([
         errorMessage: '.group-configuration-edit-error',
         inputName: '.group-configuration-name-input',
         inputDescription: '.group-configuration-description-input',
-        usageCount: 'group-configuration-usage-count',
-        usage: 'group-configuration-usage',
-        usageText: 'group-configuration-usage-text',
-        usageUnit: 'group-configuration-usage-unit'
+        usageCount: '.group-configuration-usage-count',
+        usage: '.group-configuration-usage',
+        usageText: '.group-configuration-usage-text',
+        usageTextAnchor: '.group-configuration-usage-text > a',
+        usageUnit: '.group-configuration-usage-unit',
+        usageUnitAnchor: '.group-configuration-usage-unit > a'
     };
 
     beforeEach(function() {
@@ -128,7 +130,8 @@ define([
             expect(this.view.$(SELECTORS.usageText))
                 .toContainText('This Group Configuration is not in use. ' +
                                'Start by adding a content experiment to any ' +
-                               'Unit via the Course Outline.');
+                               'Unit via the');
+            expect(this.view.$(SELECTORS.usageTextAnchor)).toExist();
             expect(this.view.$(SELECTORS.usageUnit)).not.toExist();
         });
 
@@ -143,6 +146,8 @@ define([
         });
 
         it('should show non-empty usage appropriately', function() {
+            var usageUnitAnchors;
+
             this.model.set('usage',
                 [
                     {'label': 'label1', 'url': 'url1'},
@@ -152,10 +157,17 @@ define([
             this.model.set('showGroups', false);
             this.view.$('.show-groups').click();
 
+            usageUnitAnchors = this.view.$(SELECTORS.usageUnitAnchor);
+
             expect(this.view.$(SELECTORS.usageCount)).not.toExist();
             expect(this.view.$(SELECTORS.usageText))
                 .toContainText('Group configuration is used in:');
             expect(this.view.$(SELECTORS.usageUnit).length).toBe(2);
+            expect(usageUnitAnchors.length).toBe(2);
+            expect(usageUnitAnchors.eq(0)).toContainText('label1');
+            expect(usageUnitAnchors.eq(0).attr('href')).toBe('url1');
+            expect(usageUnitAnchors.eq(1)).toContainText('label2');
+            expect(usageUnitAnchors.eq(1).attr('href')).toBe('url2');
         });
 
         it('should hide non-empty usage appropriately', function() {
@@ -171,7 +183,7 @@ define([
             expect(this.view.$(SELECTORS.usageText)).not.toExist();
             expect(this.view.$(SELECTORS.usageUnit)).not.toExist();
             expect(this.view.$(SELECTORS.usageCount))
-                .toContainText('is used by 2 units');
+                .toContainText('is used in 2 units');
         });
     });
 
