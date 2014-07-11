@@ -23,10 +23,6 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
                 this.template = this.loadTemplate('edit-section-xblock-modal');
                 this.xblockInfo = xblockInfo;
                 this.date = date;
-
-                // instrument as date and time pickers
-                // timefield.timepicker({'timeFormat' : 'H:i'});
-                // datefield.datepicker();
             },
 
 
@@ -50,6 +46,13 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal", "js/vie
                     date: this.date,
                 });
             },
+
+            render: function() {
+                BaseModal.prototype.render.call(this);
+                this.$el.find('.date').datepicker({'dateFormat': 'm/d/yy'});
+                this.$el.find('.time').timepicker({'timeFormat' : 'H:i'});
+            }
+
 
 
             // save: function(event) {
