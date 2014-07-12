@@ -1,6 +1,6 @@
 define(["jquery", "underscore", "backbone", "gettext", "js/utils/handle_iframe_binding", "js/utils/templates",
-    "js/views/feedback_notification", "js/views/feedback_prompt"],
-    function ($, _, Backbone, gettext, IframeUtils, TemplateUtils, NotificationView, PromptView) {
+        "js/views/utils/view_utils"],
+    function ($, _, Backbone, gettext, IframeUtils, TemplateUtils, ViewUtils) {
         /*
          This view is extended from backbone to provide useful functionality for all Studio views.
          This functionality includes:
@@ -48,9 +48,7 @@ define(["jquery", "underscore", "backbone", "gettext", "js/utils/handle_iframe_b
                 // this element, e.g. clicking on the element of a child view container in a parent.
                 event.stopPropagation();
                 event.preventDefault();
-                target.closest('.expand-collapse').toggleClass('expand').toggleClass('collapse');
-                target.closest('.is-collapsible, .window').toggleClass('collapsed');
-                target.closest('.is-collapsible').children('article').slideToggle();
+                ViewUtils.toggleExpandCollapse(target);
             },
 
             /**

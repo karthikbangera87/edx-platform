@@ -1081,7 +1081,7 @@ class TestXBlockInfo(ItemTest):
         Validate that the xblock info is correct for the test course.
         """
         self.assertEqual(xblock_info['category'], 'course')
-        self.assertEqual(xblock_info['id'], 'location:MITx+999+Robot_Super_Course+course+Robot_Super_Course')
+        self.assertEqual(xblock_info['id'], 'i4x://MITx/999/course/Robot_Super_Course')
         self.assertEqual(xblock_info['display_name'], 'Robot Super Course')
         self.assertTrue(xblock_info['published'])
 
@@ -1099,7 +1099,7 @@ class TestXBlockInfo(ItemTest):
         Validate that the xblock info is correct for the test chapter.
         """
         self.assertEqual(xblock_info['category'], 'chapter')
-        self.assertEqual(xblock_info['id'], 'location:MITx+999+Robot_Super_Course+chapter+Week_1')
+        self.assertEqual(xblock_info['id'], 'i4x://MITx/999/chapter/Week_1')
         self.assertEqual(xblock_info['display_name'], 'Week 1')
         self.assertTrue(xblock_info['published'])
         self.assertEqual(xblock_info['edited_by'], 'testuser')

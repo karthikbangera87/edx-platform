@@ -1,6 +1,5 @@
-define(["jquery", "underscore", "js/views/baseview", "js/views/utils/view_utils", "js/utils/handle_iframe_binding",
-    "js/spec_helpers/edit_helpers"],
-    function ($, _, BaseView, ViewUtils, IframeBinding, view_helpers) {
+define(["jquery", "underscore", "js/views/baseview", "js/views/utils/view_utils", "js/spec_helpers/edit_helpers"],
+    function ($, _, BaseView, ViewUtils, view_helpers) {
 
         describe("ViewUtils", function() {
             describe("disabled element while running", function() {

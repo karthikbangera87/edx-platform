@@ -31,11 +31,6 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                     display_name: initialDisplayName,
                     category: 'vertical'
                 });
-                containerPage = new ContainerPage({
-                    model: model,
-                    templates: edit_helpers.mockComponentTemplates,
-                    el: $('#content')
-                });
             });
 
             afterEach(function() {
@@ -53,8 +48,13 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 );
             };
 
-            renderContainerPage = function(html, that) {
-                requests = create_sinon.requests(that);
+            renderContainerPage = function(html, test, options) {
+                requests = create_sinon.requests(test);
+                containerPage = new ContainerPage(_.extend(options || {}, {
+                    model: model,
+                    templates: edit_helpers.mockComponentTemplates,
+                    el: $('#content')
+                }));
                 containerPage.render();
                 respondWithHtml(html);
             };
@@ -82,15 +82,20 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                     respondWithHtml(mockContainerXBlockHtml);
                     expect(containerPage.$('.ui-loading')).toHaveClass('is-hidden');
                 });
+
+                it('inline edits the display name when performing a new action', function() {
+                    renderContainerPage(mockContainerXBlockHtml, this, {
+                        action: 'new'
+                    });
+                    expect(containerPage.$('.xblock-header').length).toBe(9);
+                    expect(containerPage.$('.wrapper-xblock .level-nesting')).not.toHaveClass('is-hidden');
+                    expect(containerPage.$('.xblock-field-input')).not.toHaveClass('is-hidden');
+                });
             });
 
             describe("Editing the container", function() {
                 var updatedDisplayName = 'Updated Test Container',
                     expectEditCanceled, displayNameElement, displayNameInput;
-
-                beforeEach(function() {
-                    displayNameElement = containerPage.$('.page-header-title');
-                });
 
                 afterEach(function() {
                     edit_helpers.cancelModalIfShowing();
@@ -100,6 +105,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                     var initialRequests;
                     renderContainerPage(mockContainerXBlockHtml, test);
                     initialRequests = requests.length;
+                    displayNameElement = containerPage.$('.page-header-title');
                     displayNameInput = edit_helpers.inlineEdit(displayNameElement, options.newTitle);
                     if (options.pressEscape) {
                         displayNameInput.simulate("keydown", { keyCode: $.simulate.keyCode.ESCAPE });
@@ -116,6 +122,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 it('can edit itself', function() {
                     var editButtons;
                     renderContainerPage(mockContainerXBlockHtml, this);
+                    displayNameElement = containerPage.$('.page-header-title');
 
                     // Click the root edit button
                     editButtons = containerPage.$('.nav-actions .edit-button');
@@ -150,6 +157,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
 
                 it('can inline edit the display name', function() {
                     renderContainerPage(mockContainerXBlockHtml, this);
+                    displayNameElement = containerPage.$('.page-header-title');
                     displayNameInput = edit_helpers.inlineEdit(displayNameElement, updatedDisplayName);
                     displayNameInput.change();
                     // This is the response for the change operation.
@@ -163,6 +171,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 it('does not change the title when a display name update fails', function() {
                     var initialRequests;
                     renderContainerPage(mockContainerXBlockHtml, this);
+                    displayNameElement = containerPage.$('.page-header-title');
                     displayNameInput = edit_helpers.inlineEdit(displayNameElement, updatedDisplayName);
                     initialRequests = requests.length;
                     displayNameInput.change();
@@ -175,6 +184,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
 
                 it('trims whitespace from the display name', function() {
                     renderContainerPage(mockContainerXBlockHtml, this);
+                    displayNameElement = containerPage.$('.page-header-title');
                     displayNameInput = edit_helpers.inlineEdit(displayNameElement, updatedDisplayName + ' ');
                     displayNameInput.change();
                     // This is the response for the change operation.
@@ -383,10 +393,6 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                     var clickDuplicate, duplicateComponentWithSuccess,
                         refreshXBlockSpies;
 
-                    beforeEach(function() {
-                        refreshXBlockSpies = spyOn(containerPage, "refreshXBlock");
-                    });
-
                     clickDuplicate = function(componentIndex) {
 
                         // find all duplicate buttons for the given group
@@ -398,6 +404,8 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                     };
 
                     duplicateComponentWithSuccess = function(componentIndex) {
+                        refreshXBlockSpies = spyOn(containerPage, "refreshXBlock");
+
                         clickDuplicate(componentIndex);
 
                         // verify content of request
@@ -442,6 +450,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                     it('does not duplicate an xblock upon failure', function () {
                         var notificationSpy = edit_helpers.createNotificationSpy();
                         renderContainerPage(mockContainerXBlockHtml, this);
+                        refreshXBlockSpies = spyOn(containerPage, "refreshXBlock");
                         clickDuplicate(0);
                         edit_helpers.verifyNotificationShowing(notificationSpy, /Duplicating/);
                         create_sinon.respondWithError(requests);

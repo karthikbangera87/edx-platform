@@ -59,8 +59,8 @@ class ContainerPageTestCase(StudioPageTestCase):
                 course=re.escape(unicode(self.course.id)),
                 unit=re.escape(unicode(self.vertical.location)),
                 classes='navigation-item navigation-link navigation-parent',
-                section_parameters=re.escape(u'?show=location%3AMITx%2B999%2BRobot_Super_Course%2Bchapter%2BWeek_1'),
-                subsection_parameters=re.escape(u'?show=location%3AMITx%2B999%2BRobot_Super_Course%2Bsequential%2BLesson_1'),
+                section_parameters=re.escape(u'?show=i4x%3A//MITx/999/chapter/Week_1'),
+                subsection_parameters=re.escape(u'?show=i4x%3A//MITx/999/sequential/Lesson_1'),
             ),
         )
 
@@ -89,8 +89,8 @@ class ContainerPageTestCase(StudioPageTestCase):
                     unit=re.escape(unicode(self.vertical.location)),
                     split_test=re.escape(unicode(self.child_container.location)),
                     classes='navigation-item navigation-link navigation-parent',
-                    section_parameters=re.escape(u'?show=location%3AMITx%2B999%2BRobot_Super_Course%2Bchapter%2BWeek_1'),
-                    subsection_parameters=re.escape(u'?show=location%3AMITx%2B999%2BRobot_Super_Course%2Bsequential%2BLesson_1'),
+                    section_parameters=re.escape(u'?show=i4x%3A//MITx/999/chapter/Week_1'),
+                    subsection_parameters=re.escape(u'?show=i4x%3A//MITx/999/sequential/Lesson_1'),
                 ),
             )
 

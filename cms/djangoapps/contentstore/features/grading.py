@@ -130,12 +130,6 @@ def verify_weight(step, weight):
     assert_equal(world.css_value(weight_id, -1), weight)
 
 
-@step(u'I have populated the course')
-def populate_course(step):
-    add_section()
-    add_subsection()
-
-
 @step(u'I do not see the changes persisted on refresh$')
 def changes_not_persisted(step):
     reload_the_page(step)

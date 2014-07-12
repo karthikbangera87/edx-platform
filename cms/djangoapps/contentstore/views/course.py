@@ -262,17 +262,18 @@ def course_index(request, course_key):
         'lms_link': lms_link,
         'sections': sections,
         'course_structure': course_structure,
-        'initial_state': _create_course_outline_initial_state(request, course_structure),
+        'initial_state': _course_outline_initial_state(request, course_structure),
         'course_graders': json.dumps(
             CourseGradingModel.fetch(course_key).graders
         ),
     })
 
 
-def _create_course_outline_initial_state(request, course_structure):
+def _course_outline_initial_state(request, course_structure):
     """
     Returns the desired initial state for the course outline view. If the 'show' request parameter
-    was provided, then the view will select the specified locator and expand all of its children.
+    was provided, then the view's initial state will be to have the desired item fully expanded
+    and to scroll to see the new item.
     """
     def find_xblock_info(xblock_info, locator):
         """
@@ -289,6 +290,9 @@ def _create_course_outline_initial_state(request, course_structure):
         return None
 
     def collect_all_locators(locators, xblock_info):
+        """
+        Collect all the locators for an xblock and its children.
+        """
         locators.append(xblock_info['id'])
         children = xblock_info['child_info']['children'] if xblock_info['child_info'] else None
         if children:

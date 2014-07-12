@@ -202,7 +202,6 @@ define([
     "coffee/spec/models/settings_grading_spec", "coffee/spec/models/textbook_spec",
     "coffee/spec/models/upload_spec",
 
-    "coffee/spec/views/section_spec",
     "coffee/spec/views/course_info_spec", "coffee/spec/views/feedback_spec",
     "coffee/spec/views/metadata_edit_spec", "coffee/spec/views/module_edit_spec",
     "coffee/spec/views/textbook_spec", "coffee/spec/views/upload_spec",
@@ -219,11 +218,12 @@ define([
     "js/spec/utils/handle_iframe_binding_spec",
     "js/spec/utils/module_spec",
 
-    "js/spec/views/baseview_spec",
-    "js/spec/views/paging_spec",
     "js/spec/views/assets_spec",
-
+    "js/spec/views/baseview_spec",
     "js/spec/views/container_spec",
+    "js/spec/views/group_configuration_spec",
+    "js/spec/views/paging_spec",
+    "js/spec/views/unit_outline_spec",
     "js/spec/views/xblock_spec",
     "js/spec/views/xblock_editor_spec",
 
@@ -234,8 +234,6 @@ define([
 
     "js/spec/views/modals/base_modal_spec",
     "js/spec/views/modals/edit_xblock_spec",
-
-    "js/spec/views/group_configuration_spec",
 
     "js/spec/xblock/cms.runtime.v1_spec",
 
