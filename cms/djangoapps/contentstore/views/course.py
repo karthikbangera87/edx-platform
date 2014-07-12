@@ -4,6 +4,7 @@ Views related to operations on course objects
 import json
 import random
 import string  # pylint: disable=W0402
+from copy import deepcopy
 
 from django.utils.translation import ugettext as _
 import django.utils
@@ -876,14 +877,19 @@ class GroupConfiguration(object):
         self.course = course
         self.assign_id(configuration_id)
         self.assign_group_ids()
-        self.extend()
         self.validate()
 
     def to_json(self):
+        """
+        Return json-like configuration.
+        """
         return self.configuration
 
     @property
     def id(self):
+        """
+        Return group configuration id.
+        """
         return self.configuration.get('id')
 
     @staticmethod
@@ -898,16 +904,6 @@ class GroupConfiguration(object):
 
         return configuration
 
-    def extend(self):
-        """
-        Extend given group configuration by the version, etc.
-        """
-        if not self.configuration.get('version'):
-            self.configuration['version'] = UserPartition.VERSION
-
-        for group in self.configuration['groups']:
-            group['version'] = Group.VERSION
-
     def validate(self):
         """
         Validate group configuration representation.
@@ -916,14 +912,14 @@ class GroupConfiguration(object):
             raise GroupConfigurationsValidationError(_("must have name of the configuration"))
         if not isinstance(self.configuration.get("description"), basestring):
             raise GroupConfigurationsValidationError(_("must have description of the configuration"))
-        if len(self.configuration.get('groups', '')) < 2:
+        if len(self.configuration.get('groups', [])) < 2:
             raise GroupConfigurationsValidationError(_("must have at least two groups"))
 
     def assign_id(self, configuration_id=None):
         """
         Assign id for the json representation of group configuration.
         """
-        self.configuration['id'] = unicode(configuration_id) if configuration_id else random.randint(100, 10 ** 12)
+        self.configuration['id'] = int(configuration_id) if configuration_id else random.randint(100, 10 ** 12)
 
     def assign_group_ids(self):
         """
@@ -949,7 +945,14 @@ class GroupConfiguration(object):
         """
         Get user partition for saving in course.
         """
-        return UserPartition.from_json(self.configuration)
+        configuration = deepcopy(self.configuration)
+        if not configuration.get('version'):
+            configuration['version'] = UserPartition.VERSION
+
+        for group in configuration.get('groups', []):
+            group['version'] = Group.VERSION
+
+        return UserPartition.from_json(configuration)
 
 
 @require_http_methods(("GET", "POST"))
