@@ -28,31 +28,31 @@ include ways to:
 Find Posts
 ==================
 
-Finding out whether someone else has already posted about the subject you're
-interested in, and then reading and contributing to that exchange instead of
-starting a new one, helps make course discussions more productive for everyone.
-You can search for something specific or you can browse through a single
-discussion topic.
+Finding out whether someone else has already started a conversation about the
+subject you're interested in, and then reading and contributing to that
+exchange instead of starting a new one, helps make course discussions more
+productive for everyone. You can search for something specific or you can
+browse through the posts in a single discussion topic.
 
 Search the Discussions
 ****************************
 
-To search for a text "string", click **Discussion** and enter a phrase, a
-word, or part of a word in the **Search all posts** field above the list of
-posts. When you press Enter, the search tries to find:
+To search for text, click **Discussion** and enter a phrase, a word, or part of
+a word in the **Search all posts** field above the list of posts. When you
+press Enter, the search tries to find:
 
-* An exact match to your string in any post, response, or comment. A list of
+* An exact match to your text in any post, response, or comment. A list of
   the posts that have an exact match at any interaction level displays.
 
-* A similar string in any post, response, or comment if no exact matches are
-  found. A "No results found for {string}. Showing results for {similar}"
-  message displays above the list of posts that include the similar string at
-  any interaction level.
+* A similar value in any post, response, or comment (if no exact matches are
+  found). A "No results found for {text}. Showing results for {similar}"
+  message displays above the list of posts that have similar text at any
+  interaction level.
 
-* Any usernames that are an exact match to your string. A "Show posts by
+* Any usernames that are an exact match to your text. A "Show posts by
   {username}" option displays above any posts that have an exact match at any
   interaction level. Click the username in the message to read that user's
-  posts, responses, and comments and access the entire dialog.
+  posts, responses, and comments.
 
 Review Posts About a Single Topic
 **************************************
@@ -100,20 +100,21 @@ Follow Posts
 =====================
 
 If you find a post particularly interesting and want to return to it again in
-the future, you can follow it: view that post and click its top right corner.
+the future, you can follow it: view that post and click the star icon in its
+top right corner.
 
- .. image:: ../Images/Discussion_follow.png
-  :alt: A post with the Follow icon circled
+.. image:: ../Images/Discussion_follow.png
+ :alt: A post with the Follow icon circled
+
+Each post that you follow appears with a "Following" badge in the list of
+posts.
 
 To list only the posts that you are following, regardless of the discussion
 topic they apply to, click the drop-down Discussion list and select
 **Posts I'm Following**.
 
- .. image:: ../Images/Discussion_filterfollowing.png
-  :alt: The list of posts with the "Posts I'm Following" filter selected, every post shows the following badge
-
-Each post that you follow appears with a "Following" badge in the list of
-posts.
+.. image:: ../Images/Discussion_filterfollowing.png
+ :alt: The list of posts with the "Posts I'm Following" filter selected, every post shows the following badge
 
 .. _Vote for Posts or Responses:
 
@@ -124,15 +125,15 @@ Vote for Posts or Responses
 If you like a post or one of its responses, you can vote for it: view the
 post or response and click the **+** at top right.
 
- .. image:: ../Images/Discussion_vote.png
-  :alt: A post with the Vote icon circled
+.. image:: ../Images/Discussion_vote.png
+ :alt: A post with the Vote icon circled
 
 You can sort the list of posts so that the posts with the most votes appear at
 the top: click the drop-down list of sorting options and select **by most
 votes**.
 
- .. image:: ../Images/Discussion_sortvotes.png
-  :alt: The list of posts with the "by most votes" sorting option and the number of votes for the post circled
+.. image:: ../Images/Discussion_sortvotes.png
+ :alt: The list of posts with the "by most votes" sorting option and the number of votes for the post circled
 
 The number of votes that each post has gotten displays in the list of posts.
 (Votes for responses are not included in the number.)
@@ -143,11 +144,11 @@ The number of votes that each post has gotten displays in the list of posts.
 Report Discussion Misuse
 ===========================
 
-You can flag any post, response, or comment for a discussion monitor to review:
-view the post or response and then click **Report Misuse**. For a comment,
-click the flag.
+You can flag any post, response, or comment for a discussion moderator to
+review: view the post or response and then click **Report Misuse**. For a
+comment, click the flag.
 
- .. image:: ../Images/Discussion_reportmisuse.png
-  :alt: A post and a response with the Report Misuse link circled, and a comment with the flag icon circled
+.. image:: ../Images/Discussion_reportmisuse.png
+ :alt: A post and a response with the Report Misuse link circled, and a comment with the flag icon circled
 
 .. Future: DOC-121 As a course author, I need a template of discussion guidelines to give to students
