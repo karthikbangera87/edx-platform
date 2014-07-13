@@ -89,9 +89,10 @@ them from exchanges that you have already read completely.
 Receive Daily Digests
 ***********************
 
-You have the option to receive an email message that summarizes the discussion
-activity for the last day. To receive this daily digest, click **Discussion**
-and then select the **Receive updates** checkbox.
+You have the option to receive an email message that summarizes discussion
+activity for the posts you are following during the last day. To receive this
+daily digest, click **Discussion** and then select the **Receive updates**
+checkbox.
 
 .. _Follow Posts:
 
