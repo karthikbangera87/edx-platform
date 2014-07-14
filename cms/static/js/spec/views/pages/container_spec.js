@@ -95,14 +95,14 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
 
             describe("Editing the container", function() {
                 var updatedDisplayName = 'Updated Test Container',
-                    expectEditCanceled, displayNameElement, displayNameInput;
+                    expectEditCanceled;
 
                 afterEach(function() {
                     edit_helpers.cancelModalIfShowing();
                 });
 
                 expectEditCanceled = function(test, options) {
-                    var initialRequests;
+                    var initialRequests, displayNameElement, displayNameInput;
                     renderContainerPage(mockContainerXBlockHtml, test);
                     initialRequests = requests.length;
                     displayNameElement = containerPage.$('.page-header-title');
@@ -120,7 +120,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 };
 
                 it('can edit itself', function() {
-                    var editButtons;
+                    var editButtons, displayNameElement;
                     renderContainerPage(mockContainerXBlockHtml, this);
                     displayNameElement = containerPage.$('.page-header-title');
 
@@ -145,7 +145,8 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                     expect(edit_helpers.isShowingModal()).toBeFalsy();
 
                     // Expect the last request be to refresh the container page
-                    expect(str.startsWith(lastRequest().url, '/xblock/locator-container/container_preview')).toBeTruthy();
+                    expect(str.startsWith(lastRequest().url,
+                        '/xblock/locator-container/container_preview')).toBeTruthy();
                     create_sinon.respondWithJson(requests, {
                         html: mockUpdatedContainerXBlockHtml,
                         resources: []
@@ -156,6 +157,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 });
 
                 it('can inline edit the display name', function() {
+                    var displayNameElement, displayNameInput;
                     renderContainerPage(mockContainerXBlockHtml, this);
                     displayNameElement = containerPage.$('.page-header-title');
                     displayNameInput = edit_helpers.inlineEdit(displayNameElement, updatedDisplayName);
@@ -169,7 +171,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 });
 
                 it('does not change the title when a display name update fails', function() {
-                    var initialRequests;
+                    var initialRequests, displayNameElement, displayNameInput;
                     renderContainerPage(mockContainerXBlockHtml, this);
                     displayNameElement = containerPage.$('.page-header-title');
                     displayNameInput = edit_helpers.inlineEdit(displayNameElement, updatedDisplayName);
@@ -183,6 +185,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 });
 
                 it('trims whitespace from the display name', function() {
+                    var displayNameElement, displayNameInput;
                     renderContainerPage(mockContainerXBlockHtml, this);
                     displayNameElement = containerPage.$('.page-header-title');
                     displayNameInput = edit_helpers.inlineEdit(displayNameElement, updatedDisplayName + ' ');

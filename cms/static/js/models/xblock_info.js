@@ -92,7 +92,8 @@ define(["backbone", "underscore", "js/utils/module"], function(Backbone, _, Modu
         },
 
         hasChildren: function() {
-            return this.get('child_info').children.length > 0;
+            var childInfo = this.get('child_info');
+            return childInfo && childInfo.children.length > 0;
         }
     });
     return XBlockInfo;
