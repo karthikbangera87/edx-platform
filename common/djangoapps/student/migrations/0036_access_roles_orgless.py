@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from south.v2 import DataMigration
-from xmodule.modulestore.django import loc_mapper, modulestore
+from xmodule.modulestore.django import modulestore
 import re
 from opaque_keys.edx.locations import SlashSeparatedCourseKey
-from opaque_keys import InvalidKeyError
 import logging
 from django.db.models.query_utils import Q
 from django.db.utils import IntegrityError
 from xmodule.modulestore import ModuleStoreEnum
-from xmodule.modulestore.mixed import MixedModuleStore
+import bson.son
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +24,6 @@ class Migration(DataMigration):
         Converts group table entries for write access and beta_test roles to course access roles table.
         """
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
-        loc_map_collection = loc_mapper().location_map
         mixed_ms = modulestore()
         xml_ms = mixed_ms._get_modulestore_by_type(ModuleStoreEnum.Type.xml)
         mongo_ms = mixed_ms._get_modulestore_by_type(ModuleStoreEnum.Type.mongo)
@@ -59,10 +57,7 @@ class Migration(DataMigration):
             role = parsed_entry.group('role_id')
             course_id_string = parsed_entry.group('course_id_string')
             # if it's a full course_id w/ dots, ignore it
-            entry = loc_map_collection.find_one({
-                'course_id': re.compile(r'^{}$'.format(course_id_string), re.IGNORECASE)
-            })
-            if entry is None:
+            if u'/' not in course_id_string and not self.dotted_course(course_id_string):
                 # check new table to see if it's been added as org permission
                 if not orm['student.courseaccessrole'].objects.filter(
                     role=role,
@@ -86,6 +81,39 @@ class Migration(DataMigration):
                             )
                             _migrate_users(course_key, role)
 
+    def dotted_course(self, parts):
+        """
+        Look for all possible org/course/run patterns from a possibly dotted source
+        """
+        for org_stop in range(1, len(parts) - 1):
+            org = '.'.join(parts[:org_stop])
+            for course_stop in range(org_stop + 1, len(parts)):
+                course = '.'.join(parts[org_stop:course_stop])
+                run = '.'.join(parts[course_stop:])
+                course_key = SlashSeparatedCourseKey(org, course, run)
+                correct_course_key = self._map_downcased_ssck(course_key)
+                if correct_course_key is not None:
+                    return correct_course_key
+        return False
+
+    def _map_downcased_ssck(self, downcased_ssck):
+        """
+        Get the normal cased version of this downcased slash sep course key
+        """
+        course_son = bson.son.SON([
+            ('_id.tag', 'i4x'),
+            ('_id.org', re.compile(r'^{}$'.format(downcased_ssck.org), re.IGNORECASE)),
+            ('_id.course', re.compile(r'^{}$'.format(downcased_ssck.course), re.IGNORECASE)),
+            ('_id.category', 'course'),
+            ('_id.name', re.compile(r'^{}$'.format(downcased_ssck.run), re.IGNORECASE)),
+        ])
+        store = modulestore()._get_modulestore_by_type(ModuleStoreEnum.Type.mongo)
+        entry = store.collection.find_one(course_son)
+        if entry:
+            idpart = entry['_id']
+            return SlashSeparatedCourseKey(idpart['org'], idpart['course'], idpart['name'])
+        else:
+            return None
 
     def backwards(self, orm):
         "No obvious way to reverse just this migration, but reversing 0035 will reverse this."
