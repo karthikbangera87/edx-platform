@@ -86,10 +86,11 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
 
             describe("Editing the container", function() {
                 var updatedDisplayName = 'Updated Test Container',
-                    expectEditCanceled, inlineEditDisplayName, displayNameElement, displayNameInput;
+                    expectEditCanceled, inlineEditDisplayName, displayNameElement, editButton, displayNameInput;
 
                 beforeEach(function() {
                     displayNameElement = containerPage.$('.page-header-title');
+                    editButton = containerPage.$('.xblock-field-value-edit');
                 });
 
                 afterEach(function() {
@@ -97,7 +98,7 @@ define(["jquery", "underscore", "underscore.string", "js/spec_helpers/create_sin
                 });
 
                 inlineEditDisplayName = function(newTitle) {
-                    displayNameElement.click();
+                    editButton.click();
                     expect(displayNameElement).toHaveClass('is-hidden');
                     displayNameInput = containerPage.$('.xblock-string-field-editor .xblock-field-input');
                     expect(displayNameInput).not.toHaveClass('is-hidden');

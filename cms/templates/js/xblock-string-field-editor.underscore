@@ -5,5 +5,5 @@
     <button class="sr action action-primary" name="submit" type="submit">Save</button>
     <button class="sr action action-secondary" name="cancel" type="button">Cancel</button>
   </form>
-
+  <a href="" class="action-edit action-inline xblock-field-value-edit"><i class="icon-pencil"></i><span class="sr"> Edit</span></a>
 </div>

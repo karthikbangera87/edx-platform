@@ -11,6 +11,7 @@ define(["jquery", "gettext", "js/views/baseview"],
         var XBlockStringFieldEditor = BaseView.extend({
             events: {
                 'click .xblock-field-value-edit': 'showInput',
+                'click button[type=submit]': 'onClickSubmit',
                 'change .xblock-field-input': 'updateField',
                 'focusout .xblock-field-input': 'onInputFocusLost',
                 'keyup .xblock-field-input': 'handleKeyUp'
@@ -26,10 +27,12 @@ define(["jquery", "gettext", "js/views/baseview"],
             },
 
             render: function() {
-                this.$el.append(this.template({
-                    value: this.model.get(this.fieldName),
-                    fieldName: this.fieldName
-                }));
+                if (this.isEditable()) {
+                    this.$el.append(this.template({
+                        value: this.model.get(this.fieldName),
+                        fieldName: this.fieldName
+                    }));
+                }
                 return this;
             },
 
@@ -41,11 +44,20 @@ define(["jquery", "gettext", "js/views/baseview"],
                 return this.$('.xblock-field-input');
             },
 
+            isEditable: function() {
+                return this.$el.hasClass('is-editable');
+            },
+
             onInputFocusLost: function() {
                 var currentValue = this.model.get(this.fieldName);
                 if (currentValue === this.getInput().val()) {
                     this.hideInput();
                 }
+            },
+
+            onClickSubmit: function(event) {
+                event.preventDefault();
+                this.updateField();
             },
 
             onChangeField: function() {
@@ -56,6 +68,9 @@ define(["jquery", "gettext", "js/views/baseview"],
             },
 
             showInput: function(event) {
+                if (!this.isEditable()) {
+                    return;
+                }
                 var input = this.getInput();
                 event.preventDefault();
                 this.getLabel().addClass('is-hidden');
