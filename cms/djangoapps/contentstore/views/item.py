@@ -588,6 +588,7 @@ def create_xblock_info(usage_key, xblock, data=None, metadata=None):
         "edited_by": safe_get_username(xblock.subtree_edited_by),
         "published_on": get_default_time_display(xblock.published_date) if xblock.published_date else None,
         "published_by": safe_get_username(xblock.published_by),
+        "visible_to_staff_only": xblock.visible_to_staff_only,
     }
     if data is not None:
         xblock_info["data"] = data

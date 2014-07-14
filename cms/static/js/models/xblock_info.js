@@ -30,7 +30,7 @@ define(["backbone", "js/utils/module"], function(Backbone, ModuleUtils) {
              * If true, only course staff can see the xblock regardless of publish status or
              * release date status.
              */
-            "locked": null,
+            "visible_to_staff_only": null,
             /**
              * Date of the last edit to this xblock or any of its descendants.
              */

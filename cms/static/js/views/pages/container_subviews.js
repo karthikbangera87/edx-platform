@@ -83,7 +83,8 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
         var Publisher = BaseView.extend({
             events: {
                 'click .action-publish': 'publish',
-                'click .action-discard': 'discardChanges'
+                'click .action-discard': 'discardChanges',
+                'click .action-staff-lock': 'toggleStaffLock'
             },
 
             // takes XBlockInfo as a model
@@ -96,6 +97,7 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
             },
 
             onSync: function(e) {
+                    //   Necessary to listen to visible_to_staff_only? Probaby not because of published
                 if (e.changedAttributes() &&
                     (('has_changes' in e.changedAttributes()) || ('published' in e.changedAttributes()) ||
                     ('edited_on' in e.changedAttributes()) || ('edited_by' in e.changedAttributes()))) {
@@ -110,7 +112,8 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
                     edited_on: this.model.get('edited_on'),
                     edited_by: this.model.get('edited_by'),
                     published_on: this.model.get('published_on'),
-                    published_by: this.model.get('published_by')
+                    published_by: this.model.get('published_by'),
+                    visible_to_staff_only: this.model.get('visible_to_staff_only')
                 }));
 
                 return this;
@@ -150,6 +153,47 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
                             });
                     }
                 );
+            },
+
+            toggleStaffLock: function (e) {
+                var xblockInfo = this.model, that=this, removeLock;
+                if (e && e.preventDefault) {
+                    e.preventDefault();
+                }
+                removeLock = xblockInfo.get('visible_to_staff_only');
+                if (removeLock) {
+                    this.confirmThenRunOperation(gettext("Remove Staff Lock"),
+                        gettext("Are you sure you want to remove teh staff lock? Once you publish this unit, it will be released to students on the release date."),
+                        gettext("Remove Staff Lock"),
+                        function () {
+                            that.runOperationShowingMessage(gettext('Removing Staff Lock&hellip;'),
+                                function () {
+                                    return xblockInfo.save({publish: 'make_public', metadata: {visible_to_staff_only: false}}, {patch: true});
+                                }).always(function() {
+                                    xblockInfo.set("publish", null);
+                                }).done(function () {
+                                    xblockInfo.fetch();
+                                });
+                        }
+                    );
+                }
+                else {
+//                    this.confirmThenRunOperation(gettext("Remove Staff Lock"),
+//                        gettext("Are you sure you want to remove teh staff lock? Once you publish this unit, it will be released to students on the release date."),
+//                        gettext("Remove Staff Lock"),
+//                        function () {
+                            that.runOperationShowingMessage(gettext('Setting Staff Lock&hellip;'),
+                                function () {
+                                    return xblockInfo.save({publish: 'make_public', metadata: {visible_to_staff_only: true}}, {patch: true});
+                                }).always(function() {
+                                    xblockInfo.set("publish", null);
+                                }).done(function () {
+                                    xblockInfo.fetch();
+                                });
+//                        }
+//                    );
+                }
+
             }
         });
 
