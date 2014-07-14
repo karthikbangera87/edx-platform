@@ -258,6 +258,9 @@ FEATURES = {
     # Show a "Download your certificate" on the Progress page if the lowest
     # nonzero grade cutoff is met
     'SHOW_PROGRESS_SUCCESS_BUTTON': False,
+
+    # Use Open Badges in courses
+    'USE_OPEN_BADGES': True,
 }
 
 # Used for A/B testing
@@ -1401,6 +1404,11 @@ MAX_FAILED_LOGIN_ATTEMPTS_LOCKOUT_PERIOD_SECS = 15 * 60
 
 ##### LMS DEADLINE DISPLAY TIME_ZONE #######
 TIME_ZONE_DISPLAYED_FOR_DEADLINES = 'UTC'
+
+
+###################### Open Badges ############################################
+if FEATURES.get('USE_OPEN_BADGES'):
+    INSTALLED_APPS += ('badges',)
 
 
 # Source:
