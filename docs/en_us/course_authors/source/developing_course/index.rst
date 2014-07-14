@@ -9,12 +9,12 @@ Developing Your Course
    :maxdepth: 2
    
    workflow
-   understanding_outline
-   working_with_outline
+   course_outline
    course_sections
    course_subsections
    understanding_units
    working_with_units
-   releasing_courseware
+   course_components
    hiding_from_students
    testing_courseware
+   releasing_courseware

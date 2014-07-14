@@ -4,41 +4,31 @@
 Working with Units
 ###################################
 
+This chapter explains the unit-related tasks you perform when developing your course.
 
-.. _Open the Unit:
+* `Create a Unit`_
+* `Add a Component to a Unit`_
+* `Preview a Unit`_
+* `Reorganize a Unit`_
+* `Hide a Unit from Students`_
+* `Publish a Unit`_
+* `View a Published Unit`_
+* `Delete a Unit`_
 
-****************************
-Open the Unit
-****************************
-
-.. _Add a Component:
-
-****************************
-Add a Component
-****************************
-
-.. _Edit a Compononent:
-
-****************************
-Edit a Compononent
-****************************
+For more information on units, see :ref:`Understanding Units`.
 
 
-.. _Delete a Component:
 
 ****************************
-Delete a Component
+Create a Unit
 ****************************
 
 
-.. _Delete a Component:
 
-****************************
-Delete a Component
-****************************
+**************************
+Add a Component to a Unit
+**************************
 
-
-.. _Preview a Unit:
 
 ****************************
 Preview a Unit
@@ -46,30 +36,29 @@ Preview a Unit
 
 
 
-.. _Publish a Unit:
+
+************************************************
+Reorganize a Unit
+************************************************
+
+
+****************************
+Hide a Unit from Students
+****************************
+
 
 ****************************
 Publish a Unit
 ****************************
 
 
-.. _Publish a Unit:
 
 ****************************
 View a Published Unit
 ****************************
 
 
-.. _Edit a Unit:
 
-****************************
-Edit a Unit
-****************************
-
-
-.. _Hide a Unit from Students:
-
-****************************
-Hide a Unit from Students
-****************************
-
+********************************
+Delete a Unit
+********************************

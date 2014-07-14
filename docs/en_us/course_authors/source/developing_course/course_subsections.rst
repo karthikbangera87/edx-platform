@@ -1,8 +1,11 @@
-.. _Course subsections:
+.. _Course Subsections:
 
 ###################################
 Course Subections
 ###################################
+
+When working with subsections in the course outline, ensure you understand the
+following:
 
 * `What is a Subsection?`_
 * `Viewing Subsections in the Outline`_
@@ -10,12 +13,17 @@ Course Subections
 * `Subsection States`_
 * `Subsection States and Visibility to Students`_
 * `Subsections and Grading`_
+  
+Subsection tasks:
+
 * `Create a Subsection`_
-* `Edit a Subsection`_
+* `Change a Subsection Name`_
 * `Set the Assignment Type and Due Date for a Subsection`_
-* `Set the Release Date for a Subsection`_
+* `Set a Subsection Release Date`_
 * `Hide a Subsection from Students`_
+* `Reorganize Subsection`_
 * `Delete a Subsection`_
+
 
 ****************************
 What is a Subsection?
@@ -174,6 +182,7 @@ Students may not see content in a unit, if it was never published, or if it is
 hidden from students.
 
 
+.. _Subsections and Grading:
 
 *************************
 Subsections and Grading
@@ -187,6 +196,7 @@ type.  For example, if you designate the assignment type for a subsection as
 For more information, see :ref:`Establish a Grading Policy`.
 
 
+.. _Create a Subsection:
 
 ****************************
 Create a Subsection
@@ -195,11 +205,10 @@ Create a Subsection
 TBP
 
 
-****************************
-Edit a Subsection
-****************************
 
-TBP
+********************************
+Change a Subsection Name
+********************************
 
 
 ********************************************************
@@ -209,11 +218,11 @@ Set the Assignment Type and Due Date for a Subsection
 TBP
 
 
-**************************************
-Set the Release Date for a Subsection
-**************************************
 
-TBP
+
+********************************
+Set a Subsection Release Date
+********************************
 
 
 
@@ -228,9 +237,12 @@ TBP
 
 
 
+********************************
+Reorganize Subsection
+********************************
 
-****************************
+.. _Delete a Subsection:
+
+********************************
 Delete a Subsection
-****************************
-
-TBP
+********************************

@@ -4,15 +4,23 @@
 Course Sections
 ###################################
 
+
+When working with sections in the course outline, ensure you understand the
+following:
+
 * `What is a Section?`_
 * `Viewing Sections in the Outline`_
 * `The Student View of a Section`_
 * `Section States`_
 * `Section States and Visibility to Students`_
+  
+Section tasks:
+
 * `Create a Section`_
-* `Edit a Section`_
-* `Set the Release Date for a Section`_
+* `Change a Section Name`_
+* `Set a Section Release Date`_
 * `Hide a Section from Students`_
+* `Reorganize Sections`_
 * `Delete a Section`_
 
 
@@ -155,7 +163,7 @@ in the section. Students may not see content in:
 
 
 
-
+.. _Create a Section:
 
 ****************************
 Create a Section
@@ -164,29 +172,35 @@ Create a Section
 TBP
 
 
-****************************
-Edit a Section
-****************************
+
+********************************
+Change a Section Name
+********************************
 
 
-TBP
 
 
 
-***********************************
-Set the Release Date for a Section
-***********************************
 
-TBP
+********************************
+Set a Section Release Date
+********************************
 
-***********************************
+
+
+
+********************************
 Hide a Section from Students
-***********************************
+********************************
 
-TBP
 
-****************************
+
+********************************
+Reorganize Sections
+********************************
+
+
+
+********************************
 Delete a Section
-****************************
-
-TBP
+********************************

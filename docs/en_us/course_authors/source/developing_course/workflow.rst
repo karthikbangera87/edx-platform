@@ -14,22 +14,20 @@ course content, with links to more details.
 * `Revising Content`_
 * `Other Tasks`_
 
-
 .. _Understanding Course Building Blocks:
 
 ************************************
 Understanding Course Building Blocks
 ************************************
 
-Before you begin, you should understand the building blocks of an edX course. See:
+Before you begin, you should understand the building blocks of an edX course.
+See:
 
-* The course outline
-* Sections
-* Subsections
+* :ref:`The Course Outline`
+* :ref:`Course Sections`
+* :ref:`Course Subsections`
 * :ref:`Understanding Units`
-* Components
-
-
+* :ref:`Course Components`
 
 .. _Creating New Course Content:
 
@@ -37,16 +35,20 @@ Before you begin, you should understand the building blocks of an edX course. Se
 Creating New Course Content
 ****************************
 
-To create new course content, you set up the organization of your courseware, add the content in the right part of the course, schedule when different parts of the course are released, and publish content for students.
+To create new course content, you set up the organization of your courseware,
+add the content in the right part of the course, schedule when different parts
+of the course are released, and publish content for students.
 
 WORKFLOW DIAGRAM
 
-#. Create sections.
-#. Create subsections.
-#. Create units.
-#. Create components.
-#. Schedule release dates.
-#. Publish units.
+See:
+
+#. :ref:`Create a Section`
+#. :ref:`Create a Subsection`
+#. :ref:`Schedule Release Dates`
+#. :ref:`Create a Unit`
+#. :ref:`Add a Component`
+#. :ref:`Publish a Unit`
 
 
 .. _Revising Content:
@@ -57,8 +59,10 @@ Revising Content
 
 WORKFLOW DIAGRAM
 
-#. Edit units.
-#. Publish changes.
+#. :ref:`Reorganize the Course Outline`
+#. :ref:`Reorganize a Unit`
+#. :ref:`Add<Add a Component>`, :ref:`edit<Edit a Component>`, or :ref:`delete<Delete a Component>` components.
+#. :ref:`Publish a Unit`
    
 
 .. _Other Tasks:
@@ -67,6 +71,6 @@ WORKFLOW DIAGRAM
 Other Tasks
 ************************************
 
-* Set up grading for subsections.
-* Hide content from students.
+* :ref:`Subsections and Grading`
+* :ref:`Hiding Courseware from Students`
 
