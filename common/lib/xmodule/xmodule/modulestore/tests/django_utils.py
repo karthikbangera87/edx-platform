@@ -5,9 +5,7 @@ Modulestore configuration for test cases.
 from uuid import uuid4
 from django.test import TestCase
 from django.contrib.auth.models import User
-from xmodule.modulestore.django import (
-    modulestore, clear_existing_modulestores, loc_mapper
-)
+from xmodule.modulestore.django import modulestore, clear_existing_modulestores
 from xmodule.modulestore import ModuleStoreEnum
 
 
@@ -208,11 +206,6 @@ class ModuleStoreTestCase(TestCase):
 
         if hasattr(store, 'contentstore'):
             store.contentstore.drop_database()
-
-        location_mapper = loc_mapper()
-        if location_mapper.db:
-            location_mapper.location_map.drop()
-            location_mapper.db.connection.close()
 
     @classmethod
     def setUpClass(cls):
