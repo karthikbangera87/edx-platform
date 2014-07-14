@@ -6,7 +6,7 @@
     <div class="wrapper-xblock-header">
         <div class="wrapper-xblock-header-primary">
             <% if (includesChildren) { %>
-                <h3 class="xblock-title expand-collapse <%= isCollapsed ? 'expand' : 'collapse' %>" title="Collapse/Expand this Checklist">
+                <h3 class="xblock-title expand-collapse <%= isCollapsed ? 'expand' : 'collapse' %>" title="<%= gettext('Collapse/Expand this Checklist') %>">
                     <i class="icon-caret-down ui-toggle-expansion"></i>
             <% } else { %>
                 <h3 class="xblock-title">
@@ -30,9 +30,9 @@
                         </a>
                     </li>
                     <li class="actions-item drag">
-                    <span data-tooltip="<%= gettext('Drag to reorder') %>" class="drag-handle">
-                        <span class="sr"><%= gettext('Drag to reorder') %></span>
-                    </span>
+                        <span data-tooltip="<%= gettext('Drag to reorder') %>" class="drag-handle">
+                            <span class="sr"><%= gettext('Drag to reorder') %></span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -60,6 +60,7 @@
                    data-parent="<%= xblockInfo.get('id') %>" data-default-name="<%= defaultNewChildName %>">
                     <i class="icon-plus"></i><%= addChildLabel %>
                 </a>
+            </p>
         </div>
     <% } else { %>
         <ol class="sortable-list sortable-<%= xblockType %>-list">

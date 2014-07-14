@@ -1,4 +1,4 @@
-define(["backbone", "js/utils/module"], function(Backbone, ModuleUtils) {
+define(["backbone", "underscore", "js/utils/module"], function(Backbone, _, ModuleUtils) {
     var XBlockInfo = Backbone.Model.extend({
 
         urlRoot: ModuleUtils.urlRoot,
@@ -82,13 +82,9 @@ define(["backbone", "js/utils/module"], function(Backbone, ModuleUtils) {
         },
 
         parseXBlockInfoList: function(list) {
-            var i, result = [];
-            if (list) {
-                for (i=0; i < list.length; i++) {
-                    result.push(this.createChild(list[i]));
-                }
-            }
-            return result;
+            return _.map(list, function(item) {
+                return this.createChild(item);
+            }, this);
         },
 
         createChild: function(response) {

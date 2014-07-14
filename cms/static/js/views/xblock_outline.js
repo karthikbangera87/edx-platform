@@ -82,14 +82,12 @@ define(["jquery", "underscore", "gettext", "js/views/baseview", "js/views/utils/
             },
 
             renderChildren: function() {
-                var i, children, childOutlineView;
                 if (this.model.get('child_info')) {
-                    children = this.model.get('child_info').children;
-                    for (i=0; i < children.length; i++) {
-                        childOutlineView = this.createChildView(children[i], this.model);
+                    _.each(this.model.get('child_info').children, function(child) {
+                        var childOutlineView = this.createChildView(child, this.model);
                         childOutlineView.render();
                         this.addChildView(childOutlineView);
-                    }
+                    });
                 }
                 this.renderedChildren = true;
             },
@@ -127,6 +125,12 @@ define(["jquery", "underscore", "gettext", "js/views/baseview", "js/views/utils/
                 BaseView.prototype.toggleExpandCollapse.call(this, event);
             },
 
+            /**
+             * Adds handlers to the each button in the header's panel. This is managed outside of
+             * Backbone's own event registration so that the handlers don't get scoped to all the
+             * children of this view.
+             * @param element The root element of this view.
+             */
             addButtonActions: function(element) {
                 var self = this;
                 element.find('.delete-button').click(function(event) {
@@ -225,7 +229,7 @@ define(["jquery", "underscore", "gettext", "js/views/baseview", "js/views/utils/
 
             /**
              * Refresh the view's model from the server, which will cause the view to refresh.
-             * @returns {promise} A promise representing the refresh operation.
+             * @returns {jQuery promise} A promise representing the refresh operation.
              */
             refresh: function() {
                 return this.model.fetch();

@@ -4,11 +4,14 @@ Unit tests for getting the list of courses and the course outline.
 import json
 import lxml
 
+from django.conf import settings
+
 from contentstore.tests.utils import CourseTestCase
 from contentstore.utils import reverse_course_url
+from contentstore.views.course import course_outline_initial_state
+from contentstore.views.item import create_xblock_info
+from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.tests.factories import CourseFactory, ItemFactory
-from opaque_keys.edx.locator import Locator
-from django.conf import settings
 
 
 class TestCourseIndex(CourseTestCase):
@@ -84,13 +87,34 @@ class TestCourseIndex(CourseTestCase):
         # test access
         self.check_index_and_outline(course_staff_client)
 
-    def test_json_responses(self):
-        outline_url = reverse_course_url('course_handler', self.course.id)
-        chapter = ItemFactory.create(parent_location=self.course.location, category='chapter', display_name="Week 1")
-        lesson = ItemFactory.create(parent_location=chapter.location, category='sequential', display_name="Lesson 1")
-        subsection = ItemFactory.create(parent_location=lesson.location, category='vertical', display_name='Subsection 1')
-        ItemFactory.create(parent_location=subsection.location, category="video", display_name="My Video")
 
+class TestCourseOutline(CourseTestCase):
+    """
+    Unit tests for the course outline.
+    """
+    def setUp(self):
+        """
+        Set up the for the course outline tests.
+        """
+        super(TestCourseOutline, self).setUp()
+        self.chapter = ItemFactory.create(
+            parent_location=self.course.location, category='chapter', display_name="Week 1"
+        )
+        self.sequential = ItemFactory.create(
+            parent_location=self.chapter.location, category='sequential', display_name="Lesson 1"
+        )
+        self.vertical = ItemFactory.create(
+            parent_location=self.sequential.location, category='vertical', display_name='Subsection 1'
+        )
+        self.video = ItemFactory.create(
+            parent_location=self.vertical.location, category="video", display_name="My Video"
+        )
+
+    def test_json_responses(self):
+        """
+        Verify the JSON responses returned for the course.
+        """
+        outline_url = reverse_course_url('course_handler', self.course.id)
         resp = self.client.get(outline_url, HTTP_ACCEPT='application/json')
         json_response = json.loads(resp.content)
 
@@ -124,3 +148,22 @@ class TestCourseIndex(CourseTestCase):
         if json_response.get('child_info', None):
             for child_response in json_response['child_info']['children']:
                 self.assert_correct_json_response(child_response)
+
+    def test_course_outline_initial_state(self):
+        course_module = modulestore().get_item(self.course.location)
+        course_structure = create_xblock_info(
+           course_module,
+            include_child_info=True,
+            include_children_predicate=lambda xblock: not xblock.category == 'vertical'
+        )
+
+        # Verify that None is returned for a non-existent locator
+        self.assertIsNone(course_outline_initial_state('no-such-locator', course_structure))
+
+        # Verify that the correct initial state is returned for the test chapter
+        chapter_locator = unicode(self.chapter.location)
+        initial_state = course_outline_initial_state(chapter_locator, course_structure)
+        self.assertEqual(initial_state['locator_to_show'], chapter_locator)
+        expanded_locators = initial_state['expanded_locators']
+        self.assertIn(unicode(self.sequential.location), expanded_locators)
+        self.assertIn(unicode(self.vertical.location), expanded_locators)

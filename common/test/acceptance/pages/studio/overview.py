@@ -37,7 +37,7 @@ class CourseOutlineItem(object):
         """
         name_element = self.q(css=self._bounded_selector(self.NAME_SELECTOR)).first
         if name_element:
-            return name_element[0].text
+            return name_element.text[0]
         else:
             return None
 

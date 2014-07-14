@@ -256,20 +256,20 @@ def course_index(request, course_key):
     lms_link = get_lms_link_for_item(course_module.location)
     sections = course_module.get_children()
     course_structure = _course_outline_json(request, course_key)
-
+    locator_to_show = request.REQUEST.get('show', None)
     return render_to_response('course_outline.html', {
         'context_course': course_module,
         'lms_link': lms_link,
         'sections': sections,
         'course_structure': course_structure,
-        'initial_state': _course_outline_initial_state(request, course_structure),
+        'initial_state': course_outline_initial_state(locator_to_show, course_structure) if locator_to_show else None,
         'course_graders': json.dumps(
             CourseGradingModel.fetch(course_key).graders
         ),
     })
 
 
-def _course_outline_initial_state(request, course_structure):
+def course_outline_initial_state(locator_to_show, course_structure):
     """
     Returns the desired initial state for the course outline view. If the 'show' request parameter
     was provided, then the view's initial state will be to have the desired item fully expanded
@@ -299,9 +299,6 @@ def _course_outline_initial_state(request, course_structure):
             for child_xblock_info in children:
                 collect_all_locators(locators, child_xblock_info)
 
-    locator_to_show = request.REQUEST.get('show', None)
-    if not locator_to_show:
-        return None
     selected_xblock_info = find_xblock_info(course_structure, locator_to_show)
     if not selected_xblock_info:
         return None

@@ -9,7 +9,7 @@ define(["jquery", "underscore", "gettext", "js/views/utils/view_utils", "js/util
          * Adds an xblock based upon the data attributes of the specified add button. A promise
          * is returned, and the new locator is passed to all done handlers.
          * @param target The add button that was clicked upon.
-         * @returns {*} A promise representing the addition of the xblock.
+         * @returns {jQuery promise} A promise representing the addition of the xblock.
          */
         addXBlock = function(target) {
             var parentLocator = target.data('parent'),
@@ -38,7 +38,7 @@ define(["jquery", "underscore", "gettext", "js/views/utils/view_utils", "js/util
         /**
          * Deletes the specified xblock.
          * @param xblockInfo The model for the xblock to be deleted.
-         * @returns {*} A promise representing the deletion of the xblock.
+         * @returns {jQuery promise} A promise representing the deletion of the xblock.
          */
         deleteXBlock = function(xblockInfo) {
             var deletion = $.Deferred(),
@@ -73,7 +73,7 @@ define(["jquery", "underscore", "gettext", "js/views/utils/view_utils", "js/util
          * @param xblockInfo The XBlockInfo model representing the xblock.
          * @param fieldName The xblock field name to be updated.
          * @param newValue The new value for the field.
-         * @returns {promise} A promise representing the updating of the field.
+         * @returns {jQuery promise} A promise representing the updating of the field.
          */
         updateXBlockField = function(xblockInfo, fieldName, newValue) {
             var requestData = createUpdateRequestData(fieldName, newValue);

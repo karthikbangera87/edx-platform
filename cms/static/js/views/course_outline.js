@@ -19,7 +19,7 @@ define(["jquery", "underscore", "js/views/xblock_outline", "js/views/utils/view_
 
             shouldExpandChildren: function() {
                 // Expand the children if this xblock's locator is in the initially expanded state
-                if (this.initialState && _.indexOf(this.initialState.expanded_locators, this.model.id) >= 0) {
+                if (this.initialState && _.container(this.initialState.expanded_locators, this.model.id)) {
                     return true;
                 }
                 // Only expand the course and its chapters (aka sections) initially
@@ -58,7 +58,7 @@ define(["jquery", "underscore", "js/views/xblock_outline", "js/views/utils/view_
              * Note that the refresh will preserve the expanded state of this view and all of its
              * children.
              * @param viewState The desired initial state of the view, or null if none.
-             * @returns {*} A promise representing the refresh operation.
+             * @returns {jQuery promise} A promise representing the refresh operation.
              */
             refresh: function(viewState) {
                 var getViewToRefresh, view, expandedLocators;

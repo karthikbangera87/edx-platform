@@ -11,7 +11,7 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
          * Toggles the expanded state of the current element.
          */
         toggleExpandCollapse = function(target) {
-            target.closest('.expand-collapse').toggleClass('expand').toggleClass('collapse');
+            target.closest('.expand-collapse').toggleClass('expand collapse');
             target.closest('.is-collapsible, .window').toggleClass('collapsed');
             target.closest('.is-collapsible').children('article').slideToggle();
         };
@@ -127,7 +127,9 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
 
         /**
          * Returns true if a model has changes to at least one of the specified attributes.
-         * @param attributes
+         * @param model The model in question.
+         * @param attributes The list of attributes to be compared.
+         * @returns {boolean} Returns true if attribute changes are found.
          */
         hasChangedAttributes = function(model, attributes) {
             var i, changedAttributes = model.changedAttributes();
@@ -135,7 +137,7 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                 return false;
             }
             for (i=0; i < attributes.length; i++) {
-                if (changedAttributes.hasOwnProperty(attributes[i])) {
+                if (_.has(changedAttributes, attributes[i])) {
                     return true;
                 }
             }

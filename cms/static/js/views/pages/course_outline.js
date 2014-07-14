@@ -53,7 +53,7 @@ define(["jquery", "underscore", "gettext", "js/views/pages/base_page", "js/views
                 var toggleButton = this.$('.toggle-button-expand-collapse'),
                     collapse = toggleButton.hasClass('collapse-all');
                 event.preventDefault();
-                toggleButton.toggleClass('collapse-all').toggleClass('expand-all');
+                toggleButton.toggleClass('collapse-all expand-all');
                 this.$('.course-outline  > ol > li').each(function(index, domElement) {
                     var element = $(domElement),
                         expandCollapseElement = element.find('.expand-collapse').first();

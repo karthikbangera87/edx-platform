@@ -252,7 +252,7 @@ define(["jquery", "underscore", "gettext", "js/views/pages/base_page", "js/views
              * Refresh an xblock element inline on the page, using the specified xblockInfo.
              * Note that the element is removed and replaced with the newly rendered xblock.
              * @param xblockElement The xblock element to be refreshed.
-             * @returns {promise} A promise representing the complete operation.
+             * @returns {jQuery promise} A promise representing the complete operation.
              */
             refreshChildXBlock: function(xblockElement) {
                 var self = this,
