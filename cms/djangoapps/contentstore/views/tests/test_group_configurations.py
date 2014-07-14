@@ -14,41 +14,28 @@ GROUP_CONFIGURATION_JSON = {
 }
 
 
-class MockedUuid(object):
-    """
-    Mock UUID class.
-    """
-    def __init__(self):
-        self.generator = self.next_number()
-
-    @property
-    def int(self):
-        """
-        Return next number.
-        """
-        return self.generator.next()
-
-    def next_number(self):
-        """
-        Generate next number.
-        """
-        num = long('{0:0<39d}'.format(1))
-        while True:
-            yield num
-            num += long('{0:0<39d}'.format(1))
-
-
 class GroupConfigurationsBaseTestCase(object):
     """
     Base test cases for the group configurations.
     """
-    def setUp(self):  # pylint: disable=E1101
+    # pylint: disable=no-member
+    def setUp(self):
         """
         Set up a url and group configuration content for tests.
         """
+
+        def next_id():
+            """
+            Generate ids.
+            """
+            num = 000000000000
+            while True:
+                yield num
+                num += 1
+
         super(GroupConfigurationsBaseTestCase, self).setUp()
-        patcher = mock.patch('uuid.uuid4', return_value=MockedUuid())
-        self.patched_uuid4 = patcher.start()
+        patcher = mock.patch('random.randint', return_value=next_id().next())
+        self.patched_randint = patcher.start()
         self.addCleanup(patcher.stop)
 
     def test_required_fields_are_absent(self):
@@ -117,7 +104,8 @@ class GroupConfigurationsBaseTestCase(object):
         self.assertIn("error", content)
 
 
-class GroupConfigurationsListHandlerTestCase(GroupConfigurationsBaseTestCase, CourseTestCase):  # pylint: disable=E1101
+# pylint: disable=no-member
+class GroupConfigurationsListHandlerTestCase(GroupConfigurationsBaseTestCase, CourseTestCase):
     """
     Test cases for group_configurations_list_handler.
     """
@@ -198,7 +186,7 @@ class GroupConfigurationsListHandlerTestCase(GroupConfigurationsBaseTestCase, Co
         Test that you can create a group configuration.
         """
         expected = {
-            u'id': 10000000,
+            u'id': 000000000000,
             u'description': u'Test description',
             u'name': u'Test name',
             u'groups': [
@@ -219,12 +207,13 @@ class GroupConfigurationsListHandlerTestCase(GroupConfigurationsBaseTestCase, Co
         self.assertEqual(content, expected)
 
 
-class GroupConfigurationsDetailHandlerTestCase(GroupConfigurationsBaseTestCase, CourseTestCase):  # pylint: disable=E1101
+# pylint: disable=no-member
+class GroupConfigurationsDetailHandlerTestCase(GroupConfigurationsBaseTestCase, CourseTestCase):
     """
     Test cases for group_configurations_detail_handler.
     """
 
-    ID = int(str(MockedUuid().int)[:8])
+    ID = 000000000000
 
     def setUp(self):
         """
