@@ -352,13 +352,10 @@ class GroupConfigurationsTest(ContainerBase):
         Create and use group configuration
         """
         self.page.visit()
-        self.assertEqual(len(self.page.group_configurations()), 0)
         # Create new group configuration
         self.page.create()
-
         config = self.page.group_configurations()[0]
         config.name = "New Group Configuration Name"
-        config.description = "New Description of the group configuration."
         # Save the configuration
         config.save()
 
@@ -369,6 +366,26 @@ class GroupConfigurationsTest(ContainerBase):
         component_editor = ComponentEditorView(self.browser, container.locator)
         component_editor.set_select_value_and_save('Group Configuration', 'New Group Configuration Name')
         self.verify_groups(container, ['Group A', 'Group B'], [])
+
+        self.page.visit()
+        config = self.page.group_configurations()[0]
+        config.edit()
+        config.name = "Second Group Configuration Name"
+        # Save the configuration
+        config.save()
+
+        container = self.go_to_container_page()
+        container.edit()
+        component_editor = ComponentEditorView(self.browser, container.locator)
+        self.assertEqual(
+            "Second Group Configuration Name",
+            component_editor.get_selected_option_text('Group Configuration')
+        )
+        component_editor.cancel()
+        self.assertIn(
+            "Second Group Configuration Name",
+            container.get_xblock_information_message()
+        )
 
     def test_can_cancel_creation_of_group_configuration(self):
         """
