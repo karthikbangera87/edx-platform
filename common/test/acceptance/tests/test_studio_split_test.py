@@ -56,29 +56,7 @@ class SplitTest(ContainerBase):
         self.user = course_fix.user
 
     def verify_groups(self, container, active_groups, inactive_groups, verify_missing_groups_not_present=True):
-        """
-        Check that the groups appear and are correctly categorized as to active and inactive.
-
-        Also checks that the "add missing groups" button/link is not present unless a value of False is passed
-        for verify_missing_groups_not_present.
-        """
-        def wait_for_xblocks_to_render():
-            # First xblock is the container for the page, subtract 1.
-            return (len(active_groups) + len(inactive_groups) == len(container.xblocks) - 1, len(active_groups))
-
-        Promise(wait_for_xblocks_to_render, "Number of xblocks on the page are incorrect").fulfill()
-
-        def check_xblock_names(expected_groups, actual_blocks):
-            self.assertEqual(len(expected_groups), len(actual_blocks))
-            for idx, expected in enumerate(expected_groups):
-                self.assertEqual('Expand or Collapse\n{}'.format(expected), actual_blocks[idx].name)
-
-        check_xblock_names(active_groups, container.active_xblocks)
-        check_xblock_names(inactive_groups, container.inactive_xblocks)
-
-        # Verify inactive xblocks appear after active xblocks
-        check_xblock_names(active_groups + inactive_groups, container.xblocks[1:])
-
+        super(SplitTest, self).verify_groups(container, active_groups, inactive_groups)
         if verify_missing_groups_not_present:
             self.verify_add_missing_groups_button_not_present(container)
 
@@ -356,6 +334,7 @@ class GroupConfigurationsTest(ContainerBase):
         container.edit()
         component_editor = ComponentEditorView(self.browser, container.locator)
         component_editor.set_select_value_and_save('Group Configuration', 'New Group Configuration Name')
+        self.verify_groups(container, ['Group A', 'Group B'], [])
 
     def test_can_cancel_creation_of_group_configuration(self):
         """
