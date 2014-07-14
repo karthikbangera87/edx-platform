@@ -98,7 +98,9 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
             onSync: function(e) {
                 if (e.changedAttributes() &&
                     (('has_changes' in e.changedAttributes()) || ('published' in e.changedAttributes()) ||
-                    ('edited_on' in e.changedAttributes()) || ('edited_by' in e.changedAttributes()))) {
+                    ('edited_on' in e.changedAttributes()) || ('edited_by' in e.changedAttributes()) ||
+                    ('released_to_students' in e.changedAttributes()) || ('release_date' in e.changedAttributes()) ||
+                    ('release_date_from' in e.changedAttributes()))) {
                    this.render();
                 }
             },
@@ -110,7 +112,10 @@ define(["jquery", "underscore", "gettext", "js/views/baseview"],
                     edited_on: this.model.get('edited_on'),
                     edited_by: this.model.get('edited_by'),
                     published_on: this.model.get('published_on'),
-                    published_by: this.model.get('published_by')
+                    published_by: this.model.get('published_by'),
+                    released_to_students: this.model.get('released_to_students'),
+                    release_date: this.model.get('release_date'),
+                    release_date_from: this.model.get('release_date_from')
                 }));
 
                 return this;

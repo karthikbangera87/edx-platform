@@ -250,3 +250,54 @@ class XBlockVisibilityTestCase(TestCase):
             modulestore().publish(location, self.dummy_user)
 
         return vertical
+
+
+class ReleaseDateSourceTest(TestCase):
+    """Tests for finding the source of an xblock's release date."""
+
+    def setUp(self):
+        self.date_one = datetime(1980, 1, 1, tzinfo=UTC)
+        self.date_two = datetime(2020, 1, 1, tzinfo=UTC)
+
+    def _create_tree(self, name, chapter_start, sequential_start, vertical_start):
+        """Helper to create a tree with a chapter, sequential, and vertical"""
+        locations = {
+            'grandparent': Location('edX', 'date_source', name, 'chapter', 'grandparent'),
+            'parent': Location('edX', 'date_source', name, 'sequential', 'parent'),
+            'child': Location('edX', 'date_source', name, 'vertical', 'child'),
+        }
+
+        grandparent = modulestore().create_xmodule(locations['grandparent'], fields={
+            'children': [locations['parent']],
+            'start': chapter_start
+        })
+        modulestore().update_item(grandparent, user_id=ModuleStoreEnum.UserID.test, allow_not_found=True)
+
+        parent = modulestore().create_xmodule(locations['parent'], fields={
+            'children': [locations['child']],
+            'start': sequential_start
+        })
+        modulestore().update_item(parent, user_id=ModuleStoreEnum.UserID.test, allow_not_found=True)
+
+        modulestore().create_and_save_xmodule(locations['child'], user_id=ModuleStoreEnum.UserID.test, fields={
+            'start': vertical_start
+        })
+
+        return locations
+
+    def _verify_release_date_source(self, location, expected_source_location):
+        """Helper to verify that the release date source of a given item matches the expected source"""
+        source = utils.find_release_date_source(modulestore().get_item(location))
+        expected_source = modulestore().get_item(expected_source_location)
+        self.assertEqual(source.location, expected_source.location)
+        self.assertEqual(source.start, expected_source.start)
+
+    def test_chapter_source(self):
+        """Tests an xblock's release date being set by its grandparent chapter"""
+        locations = self._create_tree('chapter_source', self.date_one, self.date_one, self.date_one)
+        self._verify_release_date_source(locations['child'], locations['grandparent'])
+
+    def test_sequential_source(self):
+        """Tests an xblock's release date being set by its parent sequential"""
+        locations = self._create_tree('sequential_source', self.date_one, self.date_two, self.date_two)
+        self._verify_release_date_source(locations['child'], locations['parent'])

@@ -49,11 +49,13 @@ define(["backbone", "js/utils/module"], function(Backbone, ModuleUtils) {
             "published_by": null,
             /**
              * If the xblock is published, the date on which it will be released to students.
+             * This can be null if the release date is unscheduled.
              */
             "release_date": null,
             /**
              * The xblock which is determining the release date. For instance, for a unit,
              * this will either be the parent subsection or the grandparent section.
+             * This can be null if the release date is unscheduled.
              */
             "release_date_from":null
         }

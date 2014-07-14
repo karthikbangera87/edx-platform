@@ -4,6 +4,8 @@ from __future__ import absolute_import
 import hashlib
 import logging
 from uuid import uuid4
+from datetime import datetime
+from pytz import UTC
 
 from collections import OrderedDict
 from functools import partial
@@ -26,7 +28,8 @@ from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError, InvalidLocationError
 from xmodule.modulestore.inheritance import own_metadata
 from xmodule.x_module import PREVIEW_VIEWS, STUDIO_VIEW, STUDENT_VIEW
-from contentstore.utils import compute_publish_state
+from xmodule.course_module import DEFAULT_START_DATE
+from contentstore.utils import compute_publish_state, find_release_date_source
 from xmodule.modulestore import PublishState
 from django.contrib.auth.models import User
 from util.date_utils import get_default_time_display
@@ -34,7 +37,7 @@ from util.date_utils import get_default_time_display
 from util.json_request import expect_json, JsonResponse
 
 from .access import has_course_access
-from contentstore.views.helpers import is_unit
+from contentstore.views.helpers import is_unit, xblock_type_display_name
 from contentstore.views.preview import get_preview_fragment
 from edxmako.shortcuts import render_to_string
 from models.settings.course_grading import CourseGradingModel
@@ -561,6 +564,9 @@ def create_xblock_info(usage_key, xblock, data=None, metadata=None):
     """
     publish_state = compute_publish_state(xblock) if xblock else None
 
+    # Treat DEFAULT_START_DATE as a magic number that means the release date has not been set
+    release_date = get_default_time_display(xblock.start) if xblock.start != DEFAULT_START_DATE else None
+
     def safe_get_username(user_id):
         """
         Guard against bad user_ids, like the infamous "**replace_user**".
@@ -588,6 +594,9 @@ def create_xblock_info(usage_key, xblock, data=None, metadata=None):
         "edited_by": safe_get_username(xblock.subtree_edited_by),
         "published_on": get_default_time_display(xblock.published_date) if xblock.published_date else None,
         "published_by": safe_get_username(xblock.published_by),
+        "released_to_students": datetime.now(UTC) > xblock.start,
+        "release_date": release_date,
+        "release_date_from": _get_release_date_from(xblock) if release_date else None,
     }
     if data is not None:
         xblock_info["data"] = data
@@ -595,3 +604,13 @@ def create_xblock_info(usage_key, xblock, data=None, metadata=None):
         xblock_info["metadata"] = metadata
 
     return xblock_info
+
+
+def _get_release_date_from(xblock):
+    """
+    Returns a string representation of the section or subsection that set xblock's release date
+    """
+    source = find_release_date_source(xblock)
+    return _('{section_or_subsection} "{display_name}"').format(
+        section_or_subsection=xblock_type_display_name(source),
+        display_name=source.display_name_with_default)
