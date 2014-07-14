@@ -6,7 +6,8 @@ Discussions for Students and Staff
 
 .. please suggest a better title ^^ for this section!
 
-Course discussions give you the opportunity to start conversations with other students, ask questions of the course team, and participate in the course
+Course discussions give you the opportunity to start conversations with other
+students, ask questions of the course team, and participate in the course
 community.
 
 Features of edX discussions that can make your participation more effective
