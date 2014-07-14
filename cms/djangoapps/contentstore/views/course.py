@@ -902,7 +902,9 @@ class GroupConfiguration(object):
             raise GroupConfigurationsValidationError(_("must have description of the configuration"))
         if len(group_configuration.get('groups')) < 2:
             raise GroupConfigurationsValidationError(_("must have at least two groups"))
-
+        group_id = unicode(group_configuration.get("id", ""))
+        if group_id and not group_id.isdigit():
+            raise GroupConfigurationsValidationError(_("group configuration ID must be numeric"))
 
 @require_http_methods(("GET", "POST"))
 @login_required
