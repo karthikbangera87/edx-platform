@@ -4,7 +4,6 @@ Views related to operations on course objects
 import json
 import random
 import string  # pylint: disable=W0402
-import uuid
 
 from django.utils.translation import ugettext as _
 import django.utils
@@ -940,7 +939,7 @@ def group_configurations_list_handler(request, course_key_string):
             return JsonResponse({"error": err.message}, status=400)
 
         if not configuration.get("id"):
-            configuration["id"] = str(uuid.uuid4().int)[:8]
+            configuration["id"] = random.randint(100, 10**12)
 
         # Assign ids to every group in configuration.
         for index, group in enumerate(configuration.get('groups', [])):
