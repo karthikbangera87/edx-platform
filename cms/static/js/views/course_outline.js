@@ -19,7 +19,7 @@ define(["jquery", "underscore", "js/views/xblock_outline", "js/views/utils/view_
 
             shouldExpandChildren: function() {
                 // Expand the children if this xblock's locator is in the initially expanded state
-                if (this.initialState && _.container(this.initialState.expanded_locators, this.model.id)) {
+                if (this.initialState && _.contains(this.initialState.expanded_locators, this.model.id)) {
                     return true;
                 }
                 // Only expand the course and its chapters (aka sections) initially

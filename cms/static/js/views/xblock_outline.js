@@ -82,11 +82,13 @@ define(["jquery", "underscore", "gettext", "js/views/baseview", "js/views/utils/
             },
 
             renderChildren: function() {
-                if (this.model.get('child_info')) {
+                var self = this,
+                    xblockInfo = this.model;
+                if (xblockInfo.get('child_info')) {
                     _.each(this.model.get('child_info').children, function(child) {
-                        var childOutlineView = this.createChildView(child, this.model);
+                        var childOutlineView = self.createChildView(child, xblockInfo);
                         childOutlineView.render();
-                        this.addChildView(childOutlineView);
+                        self.addChildView(childOutlineView);
                     });
                 }
                 this.renderedChildren = true;
