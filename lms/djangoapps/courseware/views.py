@@ -23,6 +23,7 @@ from django_future.csrf import ensure_csrf_cookie
 from django.views.decorators.cache import cache_control
 from django.db import transaction
 from markupsafe import escape
+from badges.utils import badges_available_for_course
 
 from courseware import grades
 from courseware.access import has_access
@@ -32,6 +33,7 @@ from courseware.model_data import FieldDataCache
 from .module_render import toc_for_course, get_module_for_descriptor, get_module
 from courseware.models import StudentModule, StudentModuleHistory
 from course_modes.models import CourseMode
+
 
 from open_ended_grading import open_ended_notifications
 from student.models import UserTestGroup, CourseEnrollment
@@ -742,7 +744,8 @@ def _progress(request, course_key, student_id):
     courseware_summary = grades.progress_summary(student, request, course)
     studio_url = get_studio_url(course_key, 'settings/grading')
     grade_summary = grades.grade(student, request, course)
- 
+    
+    badges_values=badges_available_for_course() 
     if courseware_summary is None:
         #This means the student didn't have access to the course (which the instructor requested)
         raise Http404
@@ -755,8 +758,8 @@ def _progress(request, course_key, student_id):
         'staff_access': staff_access,
         'student': student,
         'reverifications': fetch_reverify_banner_info(request, course_key),
-	'badgename':"Demobadge",
-	'badgeimage':"https://wiki.mozilla.org/images/thumb/b/be/3ea2d817e92ac6e2e4e69bf9e9290d4f_bigger.png/100px-3ea2d817e92ac6e2e4e69bf9e9290d4f_bigger.png"
+	'badgename':badges_values['badgename'],
+	'badgeimage':badges_values['badgeimage']
 
 
     }
