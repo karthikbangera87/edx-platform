@@ -67,14 +67,31 @@ from django.conf import settings
       %if not course.disable_progress_graph:
         <div id="grade-detail-graph" aria-hidden="true"></div>
       %endif
+ 
+     <h1>Badge information</h1>
+   <div class="badgelist-for-courses">
+     	<div class="badges-course-demo1">
+   
+     	 	<img src=${(badgeimage)}></img>
      
-      <h1>Testing</h1>
+      		<h3><a>Badge name:${(badgename)}</a></h3>
+	</div>
+	<br/>
+     	<div class="badges-course-demo2">
+         
+         	<img src=${(badgeimage)}></img>
+     
+        	<h3><a>Badge name:${(badgename)}</a></h3>
+
+    	</div>
+   </div>
+
       <div class="chapters">
         %for chapter in courseware_summary:
         %if not chapter['display_name'] == "hidden":
         <section>
           <h2>${ chapter['display_name'] }</h2>
- 	  <h2>${ chapter['badgename']}</h2>
+ 	 
           <div class="sections">
             %for section in chapter['sections']:
             <div>

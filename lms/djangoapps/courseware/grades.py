@@ -399,7 +399,7 @@ def _progress_summary(student, request, course):
             'display_name': chapter_module.display_name_with_default,
             'url_name': chapter_module.url_name,
             'sections': sections,
-            'badgename':"test badge"
+          
         })
 
     return chapters

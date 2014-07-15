@@ -742,7 +742,7 @@ def _progress(request, course_key, student_id):
     courseware_summary = grades.progress_summary(student, request, course)
     studio_url = get_studio_url(course_key, 'settings/grading')
     grade_summary = grades.grade(student, request, course)
-
+ 
     if courseware_summary is None:
         #This means the student didn't have access to the course (which the instructor requested)
         raise Http404
@@ -754,7 +754,11 @@ def _progress(request, course_key, student_id):
         'grade_summary': grade_summary,
         'staff_access': staff_access,
         'student': student,
-        'reverifications': fetch_reverify_banner_info(request, course_key)
+        'reverifications': fetch_reverify_banner_info(request, course_key),
+	'badgename':"Demobadge",
+	'badgeimage':"https://wiki.mozilla.org/images/thumb/b/be/3ea2d817e92ac6e2e4e69bf9e9290d4f_bigger.png/100px-3ea2d817e92ac6e2e4e69bf9e9290d4f_bigger.png"
+
+
     }
 
     with grades.manual_transaction():
