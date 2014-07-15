@@ -67,13 +67,14 @@ from django.conf import settings
       %if not course.disable_progress_graph:
         <div id="grade-detail-graph" aria-hidden="true"></div>
       %endif
-
+     
+      <h1>Testing</h1>
       <div class="chapters">
         %for chapter in courseware_summary:
         %if not chapter['display_name'] == "hidden":
         <section>
           <h2>${ chapter['display_name'] }</h2>
-
+ 	  <h2>${ chapter['badgename']}</h2>
           <div class="sections">
             %for section in chapter['sections']:
             <div>

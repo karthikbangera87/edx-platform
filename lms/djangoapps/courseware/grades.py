@@ -391,13 +391,15 @@ def _progress_summary(student, request, course):
                     'format': module_format,
                     'due': get_extended_due_date(section_module),
                     'graded': graded,
+		   
                 })
 
         chapters.append({
             'course': course.display_name_with_default,
             'display_name': chapter_module.display_name_with_default,
             'url_name': chapter_module.url_name,
-            'sections': sections
+            'sections': sections,
+            'badgename':"test badge"
         })
 
     return chapters
