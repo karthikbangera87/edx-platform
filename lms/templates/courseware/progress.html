@@ -72,18 +72,22 @@ from django.conf import settings
    <div class="badgelist-for-courses">
      	<div class="badges-course-demo1">
    
-     	 	<img src=${(badgeimage)}></img>
-     
-      		<h3><a>Badge name:${(badgename)}</a></h3>
+     	 %for badge in badge_details['badges']:
+	
+			<h4>Badge details ${loop.index+1}:</h4>
+			<h4>BadgeID: ${badge['id']}</h4>
+			<h4>Strapline: ${badge['strapline']}</h4>
+			<h4>System: ${badge['system']}</h4>
+			<h4>Criteria: ${badge['criteria']}</h4>
+			<h4>Tags: ${badge['tags']}</h4>
+			<h4>Categories: ${badge['categories']}</h4>
+			<h4>Consumer Description: ${badge['consumerDescription']}</h4>
+
+	<br/>
+	%endfor
 	</div>
 	<br/>
-     	<div class="badges-course-demo2">
-         
-         	<img src=${(badgeimage)}></img>
      
-        	<h3><a>Badge name:${(badgename)}</a></h3>
-
-    	</div>
    </div>
 
       <div class="chapters">

@@ -5,7 +5,6 @@ Courseware views functions
 import logging
 import urllib
 import json
-
 from collections import defaultdict
 from django.utils.translation import ugettext as _
 
@@ -745,7 +744,8 @@ def _progress(request, course_key, student_id):
     studio_url = get_studio_url(course_key, 'settings/grading')
     grade_summary = grades.grade(student, request, course)
     
-    badges_values=badges_available_for_course() 
+    badges_values=badges_available_for_course()
+    
     if courseware_summary is None:
         #This means the student didn't have access to the course (which the instructor requested)
         raise Http404
@@ -758,8 +758,7 @@ def _progress(request, course_key, student_id):
         'staff_access': staff_access,
         'student': student,
         'reverifications': fetch_reverify_banner_info(request, course_key),
-	'badgename':badges_values['badgename'],
-	'badgeimage':badges_values['badgeimage']
+	'badge_details':badges_values
 
 
     }
