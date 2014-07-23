@@ -33,6 +33,7 @@ from django.conf import settings
 <%include file="/dashboard/_dashboard_prompt_midcourse_reverify.html" />
 
 <%include file="/courseware/course_navigation.html" args="active_page='progress'" />
+<link rel="stylesheet" type="text/css" href="${static.url('css/badge.css')}"/>
 
 <div class="container">
   <div class="profile-wrapper">
@@ -69,26 +70,24 @@ from django.conf import settings
       %endif
  
      <h1>Badge information</h1>
-   <div class="badgelist-for-courses">
-     	<div class="badges-course-demo1">
-   
-     	 %for badge in badge_details['badges']:
+   	<div class="badgelist-for-courses">
 	
-			<h4>Badge details ${loop.index+1}:</h4>
-			<h4>BadgeID: ${badge['id']}</h4>
-			<h4>Strapline: ${badge['strapline']}</h4>
-			<h4>System: ${badge['system']}</h4>
-			<h4>Criteria: ${badge['criteria']}</h4>
-			<h4>Tags: ${badge['tags']}</h4>
-			<h4>Categories: ${badge['categories']}</h4>
-			<h4>Consumer Description: ${badge['consumerDescription']}</h4>
-
-	<br/>
-	%endfor
-	</div>
-	<br/>
-     
-   </div>
+     		%for badge in badge_details['badges']:
+			<div class="badge-demo-edx">			
+				<h4>Badge details ${loop.index+1}:</h4>
+				<img src=${badge['imageUrl']}>
+				<h4>Badge Name: ${badge['name']}</h4>
+			
+                                ##<h4>BadgeID: ${badge['id']}</h4>
+                                ##<h4>Strapline: ${badge['strapline']}</h4>
+                                ##<h4>System: ${badge['system']}</h4>
+                                ##<h4>Criteria: ${badge['criteria']}</h4>
+                                ##<h4>Tags: ${badge['tags']}</h4>
+                                ##<h4>Categories: ${badge['categories']}</h4>
+                                ##<h4>Consumer Description: ${badge['consumerDescription']}</h4>
+			</div>
+		%endfor
+      </div>
 
       <div class="chapters">
         %for chapter in courseware_summary:
