@@ -70,23 +70,34 @@ from django.conf import settings
       %endif
  
      <h1>Badge information</h1>
-   	<div class="badgelist-for-courses">
-	
-     		%for badge in badge_details['badges']:
+    
+	 <div class="badgelist-for-courses">		
+	    %if badge_details is not None: 
+		 %for badge in badge_details['badges']:
 			<div class="badge-demo-edx">			
 				<h4>Badge details ${loop.index+1}:</h4>
-				<img src=${badge['imageUrl']}>
 				<h4>Badge Name: ${badge['name']}</h4>
+				<img src=${badge['imageUrl']} />
+				
 			
-                                ##<h4>BadgeID: ${badge['id']}</h4>
-                                ##<h4>Strapline: ${badge['strapline']}</h4>
-                                ##<h4>System: ${badge['system']}</h4>
-                                ##<h4>Criteria: ${badge['criteria']}</h4>
-                                ##<h4>Tags: ${badge['tags']}</h4>
-                                ##<h4>Categories: ${badge['categories']}</h4>
-                                ##<h4>Consumer Description: ${badge['consumerDescription']}</h4>
+                                <h4>BadgeID: ${badge['id']}</h4>
+                                <h4>Strapline: ${badge['strapline']}</h4>
+				<h4>System details:</h4>
+				%for systems in badge['system']:
+                                	<h5>${_("{system_details}:{system_values}").format(system_details=systems,system_values=badge['system'][systems])}</h5>
+					##<h5>${badge['system'][systems]}</h5>
+				%endfor
+                                <h4>Issuer: ${badge['issuer']}</h4>
+				<h4>${_("Program:{}").format(badge['program'])}</h4>
+                                <h4>Tags: ${badge['tags']}</h4>
+                                <h4>Categories: ${badge['categories']}</h4>
+                                <h4>Consumer Description: ${badge['consumerDescription']}</h4>
 			</div>
 		%endfor
+             
+       	      %else:
+       		##<h2>No badge found for this course</h2>
+              %endif	
       </div>
 
       <div class="chapters">
