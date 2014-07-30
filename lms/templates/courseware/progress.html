@@ -70,7 +70,7 @@ from django.conf import settings
       %endif
  
      <h1>Badge information</h1>
-    
+	##<p>${badge_details}</p>   
 	 <div class="badgelist-for-courses">		
 	    %if badge_details is not None: 
 		 %for badge in badge_details['badges']:
@@ -84,20 +84,27 @@ from django.conf import settings
                                 <h4>Strapline: ${badge['strapline']}</h4>
 				<h4>System details:</h4>
 				%for systems in badge['system']:
-                                	<h5>${_("{system_details}:{system_values}").format(system_details=systems,system_values=badge['system'][systems])}</h5>
-					##<h5>${badge['system'][systems]}</h5>
+                                	
+					<h6>${_("{system_details}: {system_values}").format(system_details=systems,system_values=badge['system'][systems])}</h6>
+					
 				%endfor
-                                <h4>Issuer: ${badge['issuer']}</h4>
-				<h4>${_("Program:{}").format(badge['program'])}</h4>
-                                <h4>Tags: ${badge['tags']}</h4>
-                                <h4>Categories: ${badge['categories']}</h4>
+				<h4>Issuer details:</h4>
+				%for issuers in badge['issuer']:
+                                <h6>${_("{issuer_details}: {issuer_values}").format(issuer_details=issuers,issuer_values=badge['issuer'][issuers])}</h6>
+				%endfor
+				<h4>Program details:</h4>
+				%for programs in badge['program']:
+				<h6>${_("{program_details}: {program_values}").format(program_details=programs,program_values=badge['program'][programs])}</h6>
+				%endfor
+                                
+                                <h4>Badge Categories: ${badge['categories']}</h4>
                                 <h4>Consumer Description: ${badge['consumerDescription']}</h4>
 			</div>
 		%endfor
              
-       	      %else:
-       		##<h2>No badge found for this course</h2>
-              %endif	
+       	     %else:
+       		<h2>No badge found for this course</h2>
+             %endif	
       </div>
 
       <div class="chapters">
