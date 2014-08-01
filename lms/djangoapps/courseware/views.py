@@ -745,7 +745,7 @@ def _progress(request, course_key, student_id):
     grade_summary = grades.grade(student, request, course)
     courseID=course.id.to_deprecated_string()
    
-    badges_values=badges_available_for_course(courseID)
+    badges_values=badges_available_for_course(request.user.email,courseID)
     
     if courseware_summary is None:
         #This means the student didn't have access to the course (which the instructor requested)
@@ -759,8 +759,9 @@ def _progress(request, course_key, student_id):
         'staff_access': staff_access,
         'student': student,
         'reverifications': fetch_reverify_banner_info(request, course_key),
-	'badge_details':badges_values,
-	      
+	'badge_earned':badges_values['Earned'],
+	'badge_unearned':badges_values['Unearned']
+	#'badges_values':badges_values     
 
     }
 

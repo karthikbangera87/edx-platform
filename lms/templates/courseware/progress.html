@@ -68,44 +68,75 @@ from django.conf import settings
       %if not course.disable_progress_graph:
         <div id="grade-detail-graph" aria-hidden="true"></div>
       %endif
- 
-     <h1>Badge information</h1>
-	##<p>${badge_details}</p>   
-	 <div class="badgelist-for-courses">		
-	    %if badge_details is not None: 
-		 %for badge in badge_details['badges']:
-			<div class="badge-demo-edx">			
-				<h4>Badge details ${loop.index+1}:</h4>
-				<h4>Badge Name: ${badge['name']}</h4>
-				<img src=${badge['imageUrl']} />
-				
-			
-                                <h4>BadgeID: ${badge['id']}</h4>
-                                <h4>Strapline: ${badge['strapline']}</h4>
-				<h4>System details:</h4>
-				%for systems in badge['system']:
-                                	
-					<h6>${_("{system_details}: {system_values}").format(system_details=systems,system_values=badge['system'][systems])}</h6>
+     ##<h6>${badges_values}</h6>
+     <h1>Earned Badges </h1>
+	##<p>${badge_earned}</p>   
+	## <div class="badgelist-for-courses1">		
+	   ## %if badge_earned is not None: 
+		%for badge1 in badge_earned:
+			##<div class="badge-demo-edx1">			
+				##<h4>Badge details ${loop.index+1}:</h4>
+				<h4>Badge Name: ${badge1['name']}</h4>
+				<h4>BadgeID: ${badge1['id']}</h4>
+				<img src=${badge1['imageUrl']} />
+                                ##<h4>Strapline: ${badge['strapline']}</h4>
+				##<h4>System details:</h4>
+				##%for systems in badge_earned['system']:
+##<h6>${_("{system_details}: {system_values}").format(system_details=systems,system_values=badge_earned['system'][systems])}</h6>
 					
-				%endfor
-				<h4>Issuer details:</h4>
-				%for issuers in badge['issuer']:
-                                <h6>${_("{issuer_details}: {issuer_values}").format(issuer_details=issuers,issuer_values=badge['issuer'][issuers])}</h6>
-				%endfor
-				<h4>Program details:</h4>
-				%for programs in badge['program']:
-				<h6>${_("{program_details}: {program_values}").format(program_details=programs,program_values=badge['program'][programs])}</h6>
-				%endfor
+				##%endfor
+				##<h4>Issuer details:</h4>
+				##%for issuers in badge_earned['issuer']:
+##<h6>${_("{issuer_details}: {issuer_values}").format(issuer_details=issuers,issuer_values=badge_earned['issuer'][issuers])}</h6>
+				##%endfor
+				##<h4>Program details:</h4>
+				##%for programs in badge_earned['program']:
+##<h6>${_("{program_details}: {program_values}").format(program_details=programs,program_values=badge_earned['program'][programs])}</h6>
+				##%endfor
                                 
-                                <h4>Badge Categories: ${badge['categories']}</h4>
-                                <h4>Consumer Description: ${badge['consumerDescription']}</h4>
-			</div>
+                                ##<h4>Badge Categories: ${badge['categories']}</h4>
+                                ##<h4>Consumer Description: ${badge['consumerDescription']}</h4>
+			##</div>
 		%endfor
              
-       	     %else:
-       		<h2>No badge found for this course</h2>
-             %endif	
-      </div>
+       	     ##%else:
+       		##<h2>No earned badges available</h2>
+            ##%endif	
+     ##</div>
+	<h1>Unearned Badges </h1>
+        ##<p>${badge_unearned}</p>
+         ##<div class="badgelist-for-courses2">
+           ## %if badge_unearned is not None:
+                 %for badge2 in badge_unearned:
+                       ## <div class="badge-demo-edx2">
+                                ##<h4>Badge details ${loop.index+1}:</h4>
+                                <h4>Badge Name: ${badge2['name']}</h4>
+				<h4>BadgeID: ${badge2['id']}</h4>
+
+                                <img src=${badge2['imageUrl']} />
+                                ##<h4>Strapline: ${badge['strapline']}</h4>
+                                ##<h4>System details:</h4>
+                                ##%for systems in badge['system']:
+ ## <h6>${_("{system_details}: {system_values}").format(system_details=systems,system_values=badge['system'][systems])}</h6>
+
+                               ## %endfor
+                                ##<h4>Issuer details:</h4>
+                                ##%for issuers in badge['issuer']:
+ ##<h6>${_("{issuer_details}: {issuer_values}").format(issuer_details=issuers,issuer_values=badge['issuer'][issuers])}</h6>
+                               ## %endfor
+				##<h4>Program details:</h4>
+                                ##%for programs in badge['program']:##<h6>${_("{program_details}: {program_values}").format(program_details=programs,program_values=badge['program'][programs])}</h6>
+                                ##%endfor
+
+                                ##<h4>Badge Categories: ${badge['categories']}</h4>
+                                ##<h4>Consumer Description: ${badge['consumerDescription']}</h4>
+                        ##</div>
+                %endfor
+
+             ##%else:
+                ##<h2>No unearned badges available</h2>
+            ##%endif
+     ##</div>
 
       <div class="chapters">
         %for chapter in courseware_summary:
