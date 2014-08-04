@@ -68,7 +68,7 @@ from django.conf import settings
       %if not course.disable_progress_graph:
         <div id="grade-detail-graph" aria-hidden="true"></div>
       %endif
-     ##<h6>${badges_values}</h6>
+    ##<h6>${badges_values}</h6>
      <h1>Earned Badges </h1>
 	##<p>${badge_earned}</p>   
 	## <div class="badgelist-for-courses1">		
@@ -104,10 +104,10 @@ from django.conf import settings
             ##%endif	
      ##</div>
 	<h1>Unearned Badges </h1>
-        ##<p>${badge_unearned}</p>
+       ##<p>${badge_unearned}</p>
          ##<div class="badgelist-for-courses2">
            ## %if badge_unearned is not None:
-                 %for badge2 in badge_unearned:
+                %for badge2 in badge_unearned:
                        ## <div class="badge-demo-edx2">
                                 ##<h4>Badge details ${loop.index+1}:</h4>
                                 <h4>Badge Name: ${badge2['name']}</h4>
@@ -131,7 +131,7 @@ from django.conf import settings
                                 ##<h4>Badge Categories: ${badge['categories']}</h4>
                                 ##<h4>Consumer Description: ${badge['consumerDescription']}</h4>
                         ##</div>
-                %endfor
+               %endfor
 
              ##%else:
                 ##<h2>No unearned badges available</h2>
