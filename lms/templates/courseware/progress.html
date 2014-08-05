@@ -71,8 +71,8 @@ from django.conf import settings
     ##<h6>${badges_values}</h6>
      <h1>Earned Badges </h1>
 	##<p>${badge_earned}</p>   
-	## <div class="badgelist-for-courses1">		
-	   ## %if badge_earned is not None: 
+	<div class="badgelist-for-courses1">		
+	   %if badge_earned: 
 		%for badge1 in badge_earned:
 			##<div class="badge-demo-edx1">			
 				##<h4>Badge details ${loop.index+1}:</h4>
@@ -99,15 +99,15 @@ from django.conf import settings
 			##</div>
 		%endfor
              
-       	     ##%else:
-       		##<h2>No earned badges available</h2>
-            ##%endif	
-     ##</div>
+       	     %else:
+       		<h2>No earned badges available</h2>
+            %endif	
+     </div>
 	<h1>Unearned Badges </h1>
        ##<p>${badge_unearned}</p>
          ##<div class="badgelist-for-courses2">
-           ## %if badge_unearned is not None:
-                %for badge2 in badge_unearned:
+           %if badge_unearned:
+               %for badge2 in badge_unearned:
                        ## <div class="badge-demo-edx2">
                                 ##<h4>Badge details ${loop.index+1}:</h4>
                                 <h4>Badge Name: ${badge2['name']}</h4>
@@ -133,9 +133,9 @@ from django.conf import settings
                         ##</div>
                %endfor
 
-             ##%else:
-                ##<h2>No unearned badges available</h2>
-            ##%endif
+             %else:
+                <h2>No unearned badges available</h2>
+            %endif
      ##</div>
 
       <div class="chapters">

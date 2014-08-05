@@ -744,7 +744,7 @@ def _progress(request, course_key, student_id):
     studio_url = get_studio_url(course_key, 'settings/grading')
     grade_summary = grades.grade(student, request, course)
     courseID=course.id.to_deprecated_string()
-   
+    
     badges_values=badges_available_for_course(request.user.email,courseID)
     
     if courseware_summary is None:
