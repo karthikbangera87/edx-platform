@@ -261,6 +261,9 @@ FEATURES = {
 
     # Use Open Badges in courses
     'USE_OPEN_BADGES': True,
+
+    # Use of badges in course or not feature
+    'BADGE_AVAILABLE':False,
 }
 
 # Used for A/B testing

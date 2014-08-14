@@ -7,7 +7,6 @@ import urllib
 import json
 from collections import defaultdict
 from django.utils.translation import ugettext as _
-
 from django.conf import settings
 from django.core.context_processors import csrf
 from django.core.exceptions import PermissionDenied
@@ -743,9 +742,15 @@ def _progress(request, course_key, student_id):
     courseware_summary = grades.progress_summary(student, request, course)
     studio_url = get_studio_url(course_key, 'settings/grading')
     grade_summary = grades.grade(student, request, course)
-    courseID=course.id.to_deprecated_string()
     
-    badges_values=badges_available_for_course(request.user.email,courseID)
+    badges_values={}    
+    if settings.FEATURES.get('BADGE_AVAILABLE')==False:
+    
+    	courseID=course.id.to_deprecated_string()
+    	badges_values=badges_available_for_course(request.user.email,courseID,courseware_summary)
+    else:
+	badges_values['Earned']=None
+	badges_values['Unearned']=None
     
     if courseware_summary is None:
         #This means the student didn't have access to the course (which the instructor requested)
@@ -760,8 +765,8 @@ def _progress(request, course_key, student_id):
         'student': student,
         'reverifications': fetch_reverify_banner_info(request, course_key),
 	'badge_earned':badges_values['Earned'],
-	'badge_unearned':badges_values['Unearned']
-	#'badges_values':badges_values     
+	'badge_unearned':badges_values['Unearned'],
+	#'badges_values':badges_values 
 
     }
 
