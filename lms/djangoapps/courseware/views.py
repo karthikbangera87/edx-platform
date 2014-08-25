@@ -743,6 +743,10 @@ def _progress(request, course_key, student_id):
     studio_url = get_studio_url(course_key, 'settings/grading')
     grade_summary = grades.grade(student, request, course)
     
+    if courseware_summary is None:
+        #This means the student didn't have access to the course (which the instructor requested)
+        raise Http404
+    
     badges_values={}    
     if settings.FEATURES.get('BADGE_AVAILABLE')==False:
     
@@ -751,10 +755,6 @@ def _progress(request, course_key, student_id):
     else:
 	badges_values['Earned']=None
 	badges_values['Unearned']=None
-    
-    if courseware_summary is None:
-        #This means the student didn't have access to the course (which the instructor requested)
-        raise Http404
 
     context = {
         'course': course,

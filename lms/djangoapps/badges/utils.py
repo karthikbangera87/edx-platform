@@ -4,8 +4,19 @@
 
 import badgekit.api,random
 
+
 # global badge tracker to keep track of issued and not issued badges
 badge_track={}
+
+def currentbadgesystem():
+	#currently hardcoded,will change later as per the system set
+	default='badgekit'
+	return default
+
+def setupbadgekit():
+
+	return badgekit.api.BadgeKitAPI('http://10.0.2.2:5000','hihello',defaults={'system':currentbadgesystem()})
+
 
 #set_badge_track method takes the available badges as arguement and updates the badge track items to not_issued
 def set_badge_track(avail):
@@ -25,7 +36,7 @@ def badges_issued(obj,badge_issuer,badge_program,UserEmail,available_badge_ids):
 	 
 	earned=[]	
 	#listing the badgeinstances by email[current user]
-	raw_badges=obj.list('email',system='badgekit',issuer=badge_issuer,program=badge_program,instance=UserEmail)
+	raw_badges=obj.list('email',system=currentbadgesystem(),issuer=badge_issuer,program=badge_program,instance=UserEmail)
 	if raw_badges:
         	for badge_instances in raw_badges['instances']:
                 	for item in available_badge_ids:
@@ -52,9 +63,9 @@ def badgekit_details(courseID):
 
 def badges_available_for_course(UserEmail,courseID,course_summary):
 
-	#Python badgekit API connector object
-	a=badgekit.api.BadgeKitAPI('http://10.0.2.2:5000','hihello',defaults={'system':'badgekit'})
-		
+	#Python badgekit API connector object returned from the call to setupbadgekit()
+	a=setupbadgekit()
+	
 	#setting of the badge issuer,program and course run by calling badgekit details		
 	badge_issuer,badge_program,course_run=badgekit_details(courseID)
 	
