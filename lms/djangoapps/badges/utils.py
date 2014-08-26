@@ -59,13 +59,46 @@ def badgekit_details(courseID):
 	course_details=courseID.split('/')
     	#{org}/{course}/{run} (for example, MITx/6.002x/2012_Fall).     
 	return course_details
+
+def homework_badges(connector,badges_return,*args):
+	#Homework tracker
+	HW_count=0
+	#setting of the badge issuer,program and course run by calling badgekit details         
+        badge_issuer,badge_program,course_run=badgekit_details(courseid)
+	#parsing through details in course summary and checking for sections which are graded and the format is Homework
+        #currently the list of homeworks is mapped the the available badgeids i.e HW[1,2,3]= badges[4,7,8]
+        #probably this mapping can be set while creating the course ie each homework is mapped to particular badge 
+        for details in course_details:
+                for section in details['sections']:
+                        if section['graded']==True and section['format']=='Homework':
+                                # access section total and determine result
+                                earned=section['section_total'][0]
+                                possible=section['section_total'][1]
+                                store_result=earned/possible
+                                #if the result is greater that 50% we issue a badge and proceed to next homework
+                                if store_result >= 0.2:
+                                        global badge_track
+                                        # check to see if the badge is not issued else we create the badgeinstance
+                                        if badge_track[args[0][HW_count]] =='not_issued':
+                                                connector.create('instance',{'slug':'{}'.format(random.randrange(0,5000,1)),'email':useremail,'badgeId':args[0][HW_count]},system=currentbadgesystem(),issuer=badge_issuer,program=badge_program,badge=args[1][HW_count])
+
+
+                                        HW_count+=1
+                                else:
+                                        HW_count+=1
+
+
+
+        #return the badges earned and unearned details          
+        return badges_return
 	 
-
 def badges_available_for_course(UserEmail,courseID,course_summary):
-
+	global courseid,useremail,course_details
 	#Python badgekit API connector object returned from the call to setupbadgekit()
-	a=setupbadgekit()
-	
+	badgekit_connector=setupbadgekit()
+	courseid=courseID
+	useremail=UserEmail
+	course_details=course_summary	
 	#setting of the badge issuer,program and course run by calling badgekit details		
 	badge_issuer,badge_program,course_run=badgekit_details(courseID)
 	
@@ -76,11 +109,8 @@ def badges_available_for_course(UserEmail,courseID,course_summary):
 	# return the badge earned and unearned details
 	badges_return={'Earned':[],'Unearned':[]}
 	
-	# track of Homework currently (may change)
-	HW_count=0
-	
 	# Us of connector object to list all badge available under the badgekit system for this issuer and program
-	badges_available= a.list('badge',system='badgekit',issuer=badge_issuer,program=badge_program)
+	badges_available= badgekit_connector.list('badge',system=currentbadgesystem(),issuer=badge_issuer,program=badge_program)
 
 	# extract badge ids and slugs from badges avaialable 
 	for badge in badges_available['badges']:
@@ -88,7 +118,7 @@ def badges_available_for_course(UserEmail,courseID,course_summary):
 		available_badge_slugs.append(badge['slug'])
 	
 	# call to badges_issued,intially in the first iteration value is empty since no badge is issued for the current user
-	earned_list=badges_issued(a,badge_issuer,badge_program,UserEmail,available_badge_ids)	
+	earned_list=badges_issued(badgekit_connector,badge_issuer,badge_program,UserEmail,available_badge_ids)	
 	
 	# if earned_list is empty we set all unearned badges to the available badges for the course
 	if not earned_list:
@@ -106,29 +136,6 @@ def badges_available_for_course(UserEmail,courseID,course_summary):
 						if item == badge['id']:
 							badges_return['Unearned'].append(badge)
 	
-	#parsing through details in course summary and cehcking for sections which are graded and the format is Homework
-	#currently the list of homeworks is mapped the the available badgeids i.e HW[1,2,3]= badges[4.7.8]
-	#probably this mapping can be set while creating the course ie each homework is mapped to particular badge 
-	for details in course_summary:
-		for section in details['sections']:
-			if section['graded']==True and section['format']=='Homework':
-				# access section total and determine result
-				earned=section['section_total'][0]
-				possible=section['section_total'][1]
-              			store_result=earned/possible
-				#if the result is greater that 50% we issue a badge and proceed to next homework
-              			if store_result >= 0.5:
-				 	global badge_track
-					# check to see if the badge is not issued else we create the badgeinstance
-					if badge_track[available_badge_ids[HW_count]] =='not_issued':
-						a.create('instance',{'slug':'{}'.format(random.randrange(0,5000,1)),'email':UserEmail,'badgeId':available_badge_ids[HW_count]},system='badgekit',issuer=badge_issuer,program=badge_program,badge=available_badge_slugs[HW_count])		
-	
-							
-					HW_count+=1
-				else:
-					HW_count+=1
-					
-	
- 
-        #return the badges earned and unearned details		
-	return badges_return
+	badges=homework_badges(badgekit_connector,badges_return,available_badge_ids,available_badge_slugs)
+
+	return badges
