@@ -20,11 +20,11 @@ from edxmako.shortcuts import render_to_response
 from xmodule.error_module import ErrorDescriptor
 from xmodule.modulestore.django import modulestore
 from xmodule.contentstore.content import StaticContent
-from xmodule.tabs import PDFTextbookTabs
+from xmodule.tabs import PDFTextbookTabs 
 
 from xmodule.modulestore.exceptions import ItemNotFoundError, InvalidLocationError
 from opaque_keys import InvalidKeyError
-from opaque_keys.edx.locations import Location, SlashSeparatedCourseKey
+from opaque_keys.edx.locations import Location, SlashSeparatedCourseKey,UsageKey
 
 from contentstore.course_info_model import get_course_updates, update_course_updates, delete_course_update
 from contentstore.utils import (
@@ -61,6 +61,7 @@ from student.roles import CourseInstructorRole, CourseStaffRole, CourseCreatorRo
 from student import auth
 
 from microsite_configuration import microsite
+from .badges import get_badges
 
 __all__ = ['course_info_handler', 'course_handler', 'course_info_update_handler',
            'settings_handler',
@@ -532,9 +533,11 @@ def grading_handler(request, course_key_string, grader_index=None):
         json no grader_index: update the Course through the CourseGrading model
         json w/ grader_index: create or update the specific grader (create if index out of range)
     """
+    
     course_key = CourseKey.from_string(course_key_string)
     course_module = _get_course_module(course_key, request.user)
-
+    courseID=course_module.id.to_deprecated_string()
+    badge_obj=get_badges(courseID,request.user.email) 
     if 'text/html' in request.META.get('HTTP_ACCEPT', '') and request.method == 'GET':
         course_details = CourseGradingModel.fetch(course_key)
 
@@ -543,7 +546,9 @@ def grading_handler(request, course_key_string, grader_index=None):
             'course_locator': course_key,
             'course_details': json.dumps(course_details, cls=CourseSettingsEncoder),
             'grading_url': reverse_course_url('grading_handler', course_key),
-        })
+       	    'available_badges':badge_obj
+			
+    })
     elif 'application/json' in request.META.get('HTTP_ACCEPT', ''):
         if request.method == 'GET':
             if grader_index is None:

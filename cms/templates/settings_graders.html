@@ -94,7 +94,6 @@ require(["domReady!", "jquery", "js/views/settings/grading", "js/models/settings
             <h2 class="title-2">${_("Grading Rules &amp; Policies")}</h2>
             <span class="tip">${_("Deadlines, requirements, and logistics around grading student work")}</span>
           </header>
-
           <ol class="list-input">
             <li class="field text" id="field-course-grading-graceperiod">
               <label for="course-grading-graceperiod">${_("Grace Period on Deadline:")}</label>
@@ -102,6 +101,15 @@ require(["domReady!", "jquery", "js/views/settings/grading", "js/models/settings
               <span class="tip tip-inline">${_("Leeway on due dates")}</span>
             </li>
           </ol>
+	<header>
+            <h2 class="title-2">${_("Badge Issuing")}</h2>
+            <span class="tip">${_("Assign badges to different graded modules")}</span>
+         </header>
+		%for badge_iter in available_badges['badges']:
+               		<h4>Badge Name: ${badge_iter['name']}</h4>
+                        <h4>BadgeID: ${badge_iter['id']}</h4>
+                        <img src=${badge_iter['imageUrl']} width="50px" height="50px" />
+                %endfor
         </section>
 
         <hr class="divide" />
